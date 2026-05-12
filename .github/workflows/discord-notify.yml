@@ -14,7 +14,6 @@ on:
 
 jobs:
   notify:
-    if: ${{ secrets.DISCORD_WEBHOOK_URL != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord notification
@@ -23,6 +22,11 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
           script: |
+            if (!process.env.DISCORD_WEBHOOK_URL) {
+              core.info('DISCORD_WEBHOOK_URL is not set. Skipping notification.');
+              return;
+            }
+
             const eventName = context.eventName;
             const payload = context.payload;
             const repo = `${context.repo.owner}/${context.repo.repo}`;
