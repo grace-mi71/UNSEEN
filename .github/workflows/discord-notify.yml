@@ -1,0 +1,102 @@
+name: Discord Notifications
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+jobs:
+  notify:
+    if: ${{ secrets.DISCORD_WEBHOOK_URL != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        uses: actions/github-script@v7
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          script: |
+            const eventName = context.eventName;
+            const payload = context.payload;
+            const repo = `${context.repo.owner}/${context.repo.repo}`;
+            let title = 'GitHub Update';
+            let description = '';
+            let url = `https://github.com/${repo}`;
+            let color = 5793266;
+
+            if (eventName === 'push') {
+              const branch = payload.ref.replace('refs/heads/', '');
+              title = `Push to ${branch}`;
+              description = `${payload.pusher.name} pushed ${payload.commits.length} commit(s).`;
+              url = payload.compare || url;
+              color = 3447003;
+            }
+
+            if (eventName === 'pull_request') {
+              const pr = payload.pull_request;
+              url = pr.html_url;
+
+              if (payload.action === 'opened') {
+                title = `PR Opened #${pr.number}`;
+                description = `${pr.user.login} opened "${pr.title}".`;
+                color = 15844367;
+              } else if (payload.action === 'reopened') {
+                title = `PR Reopened #${pr.number}`;
+                description = `${pr.user.login} reopened "${pr.title}".`;
+                color = 15844367;
+              } else if (payload.action === 'synchronize') {
+                title = `PR Updated #${pr.number}`;
+                description = `${pr.user.login} pushed new commits to "${pr.title}".`;
+                color = 10181046;
+              } else if (payload.action === 'closed' && pr.merged) {
+                title = `PR Merged #${pr.number}`;
+                description = `${pr.merged_by ? pr.merged_by.login : pr.user.login} merged "${pr.title}".`;
+                color = 5763719;
+              } else {
+                core.info('Skipping non-merged PR close event.');
+                return;
+              }
+            }
+
+            const body = {
+              username: 'UNSEEN Bot',
+              embeds: [
+                {
+                  title,
+                  url,
+                  description,
+                  color,
+                  fields: [
+                    {
+                      name: 'Repository',
+                      value: repo,
+                      inline: true
+                    },
+                    {
+                      name: 'Event',
+                      value: eventName,
+                      inline: true
+                    }
+                  ],
+                  timestamp: new Date().toISOString()
+                }
+              ]
+            };
+
+            const response = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+              const text = await response.text();
+              core.setFailed(`Discord webhook failed: ${response.status} ${text}`);
+            }
