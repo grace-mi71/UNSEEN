@@ -63,6 +63,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0ac0b506d963e04b88c12059d891cf0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4820049062366834586}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0ac0b506d963e04b88c12059d891cf0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7258903391977404580}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0ac0b506d963e04b88c12059d891cf0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4183696035478864058}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0ac0b506d963e04b88c12059d891cf0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5169344154947861963}
   m_SourcePrefab: {fileID: 100100000, guid: d0ac0b506d963e04b88c12059d891cf0, type: 3}
 --- !u!1 &877417660292920095 stripped
 GameObject:
@@ -91,3 +100,66 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!135 &7258903391977404580
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877417660292920095}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.9228856
+  m_Center: {x: 0, y: 0.8508201, z: 0}
+--- !u!195 &4183696035478864058
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877417660292920095}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &5169344154947861963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877417660292920095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ab37c764f1d0f4cb5c55411b6df694, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterAI
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  climbDuration: 4
