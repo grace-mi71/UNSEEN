@@ -6399,7 +6399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 66855984, guid: 71abaa0785ba2e74e8409dd54b04785d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.47
+      value: -4.57
       objectReference: {fileID: 0}
     - target: {fileID: 66855984, guid: 71abaa0785ba2e74e8409dd54b04785d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6407,7 +6407,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 66855984, guid: 71abaa0785ba2e74e8409dd54b04785d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.47
+      value: 32.46
       objectReference: {fileID: 0}
     - target: {fileID: 66855984, guid: 71abaa0785ba2e74e8409dd54b04785d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -31331,8 +31331,16 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: climbDuration
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: startInElevator
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: climbWaypointIndex
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: waypoints.Array.size
