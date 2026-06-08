@@ -30,19 +30,6 @@ public class ElevatorController : MonoBehaviour
         if (rightDoor != null) rightDoorClosedLocalPos = rightDoor.localPosition;
     }
 
-    // 임시 테스트용 키보드 입력 감지
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            OpenDoor();
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            CloseDoor();
-        }
-    }
-
     // 인스펙터 우클릭 테스트용 속성 추가
     [ContextMenu("Test Open Door")]
     public void OpenDoor()

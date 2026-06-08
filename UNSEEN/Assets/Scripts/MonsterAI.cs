@@ -1,70 +1,117 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-// 몬스터 순찰, 랜덤 이동 및 클라이밍 스크립트
 public class MonsterAI : MonoBehaviour
 {
     public Transform[] waypoints;
-    private int currentPoint = 0;
+    public Transform player;
 
+    [Header("Elevator Settings")]
+    public bool startInElevator = false;
+    public float walkOutTime = 2.0f;
+    public float walkOutSpeed = 2.0f;
+
+    private int currentPoint = 0;
     private NavMeshAgent agent;
     private Animator anim;
-
-    // 클라이밍 애니메이션과 역재생이 끝나는 데 걸리는 총 시간
-    public float climbDuration = 4.0f;
-
-    // 중복 실행을 막기 위한 상태 확인 변수
-    private bool isWaiting = false;
+    private bool isChasing = false;
+    private bool isWalkingOut = false;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
-        MoveToNextPoint();
+        // 엘리베이터에서 시작하는지 확인
+        if (startInElevator)
+        {
+            StartWalkOut();
+        }
+        else
+        {
+            MoveToNextPoint();
+        }
     }
 
     void Update()
     {
-        // 대기 중이 아닐 때 목표 지점 도착 확인
-        if (!isWaiting && !agent.pathPending && agent.remainingDistance < 0.1f)
+        // 엘리베이터에서 나오는 중일 때 강제 직진
+        if (isWalkingOut)
         {
-            isWaiting = true;
-
-            // 이동 애니메이션 중지 및 클라이밍 시작
-            anim.SetBool("IsWalking", false);
-            anim.SetTrigger("Climb");
-
-            // 설정한 시간(climbDuration) 대기 후 다음 지점으로 이동
-            Invoke("MoveToNextPoint", climbDuration);
+            transform.Translate(Vector3.forward * walkOutSpeed * Time.deltaTime);
+            return;
         }
+
+        // 플레이어 추격 중일 때
+        if (isChasing)
+        {
+            if (player != null)
+            {
+                agent.destination = player.position;
+            }
+            return;
+        }
+
+        // 웨이포인트 이동 중일 때
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            if (currentPoint == waypoints.Length - 1)
+            {
+                StartChasing();
+            }
+            else
+            {
+                currentPoint++;
+                MoveToNextPoint();
+            }
+        }
+    }
+
+    void StartWalkOut()
+    {
+        isWalkingOut = true;
+        // 내비메시 에이전트를 잠시 꺼서 에러 방지
+        agent.enabled = false;
+
+        // 걷기 애니메이션 실행 (0번 걷기)
+        anim.SetInteger("WalkType", 0);
+
+        // 설정한 시간 뒤에 탈출 종료 함수 실행
+        Invoke("FinishWalkOut", walkOutTime);
+    }
+
+    void FinishWalkOut()
+    {
+        isWalkingOut = false;
+        // 파란색 내비메시 영역에 도착했으므로 다시 에이전트 켜기
+        agent.enabled = true;
+
+        MoveToNextPoint();
     }
 
     void MoveToNextPoint()
     {
         if (waypoints.Length == 0) return;
 
-        isWaiting = false;
-
-        // 0부터 4까지 총 5개의 이동 애니메이션 중 하나를 랜덤으로 선택
-        int randomWalk = Random.Range(0, 5);
+        int randomWalk = Random.Range(0, 3);
         anim.SetInteger("WalkType", randomWalk);
 
-        // 이동 상태로 전환 및 목적지 설정
-        anim.SetBool("IsWalking", true);
         agent.destination = waypoints[currentPoint].position;
+    }
 
-        currentPoint = (currentPoint + 1) % waypoints.Length;
+    void StartChasing()
+    {
+        isChasing = true;
+        agent.speed = 4.0f;
+        anim.SetInteger("WalkType", 3);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // 에이전트 정지 
             agent.isStopped = true;
-            anim.SetBool("IsWalking", false);
-
+            anim.SetTrigger("Attack");
             Debug.Log("GameOver");
         }
     }
