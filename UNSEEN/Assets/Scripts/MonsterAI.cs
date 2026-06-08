@@ -11,18 +11,30 @@ public class MonsterAI : MonoBehaviour
     public float walkOutTime = 2.0f;
     public float walkOutSpeed = 2.0f;
 
+    [Header("Climb Settings")]
+    // 클라이밍을 실행할 웨이포인트 인덱스 (0이 첫 번째 웨이포인트)
+    public int climbWaypointIndex = 1;
+    // 클라이밍(올라가기+내려오기) 애니메이션이 완전히 끝날 때까지 기다리는 시간
+    public float climbDuration = 4.0f;
+
     private int currentPoint = 0;
     private NavMeshAgent agent;
     private Animator anim;
     private bool isChasing = false;
     private bool isWalkingOut = false;
+    private bool isClimbing = false;
+
+    // 고유 걸음걸이 저장용
+    private int myWalkType;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
-        // 엘리베이터에서 시작하는지 확인
+        myWalkType = Random.Range(0, 3);
+        anim.SetInteger("WalkType", myWalkType);
+
         if (startInElevator)
         {
             StartWalkOut();
@@ -35,14 +47,16 @@ public class MonsterAI : MonoBehaviour
 
     void Update()
     {
-        // 엘리베이터에서 나오는 중일 때 강제 직진
-        if (isWalkingOut)
+        // 엘리베이터에서 나오거나 클라이밍 중일 때는 길찾기 업데이트 중지
+        if (isWalkingOut || isClimbing)
         {
-            transform.Translate(Vector3.forward * walkOutSpeed * Time.deltaTime);
+            if (isWalkingOut)
+            {
+                transform.Translate(Vector3.forward * walkOutSpeed * Time.deltaTime);
+            }
             return;
         }
 
-        // 플레이어 추격 중일 때
         if (isChasing)
         {
             if (player != null)
@@ -52,7 +66,6 @@ public class MonsterAI : MonoBehaviour
             return;
         }
 
-        // 웨이포인트 이동 중일 때
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
             if (currentPoint == waypoints.Length - 1)
@@ -61,8 +74,16 @@ public class MonsterAI : MonoBehaviour
             }
             else
             {
-                currentPoint++;
-                MoveToNextPoint();
+                // 현재 도착한 곳이 지정한 클라이밍 위치라면 클라이밍 시작
+                if (currentPoint == climbWaypointIndex)
+                {
+                    StartClimbing();
+                }
+                else
+                {
+                    currentPoint++;
+                    MoveToNextPoint();
+                }
             }
         }
     }
@@ -70,22 +91,36 @@ public class MonsterAI : MonoBehaviour
     void StartWalkOut()
     {
         isWalkingOut = true;
-        // 내비메시 에이전트를 잠시 꺼서 에러 방지
         agent.enabled = false;
-
-        // 걷기 애니메이션 실행 (0번 걷기)
-        anim.SetInteger("WalkType", 0);
-
-        // 설정한 시간 뒤에 탈출 종료 함수 실행
+        anim.SetInteger("WalkType", myWalkType);
         Invoke("FinishWalkOut", walkOutTime);
     }
 
     void FinishWalkOut()
     {
         isWalkingOut = false;
-        // 파란색 내비메시 영역에 도착했으므로 다시 에이전트 켜기
         agent.enabled = true;
+        MoveToNextPoint();
+    }
 
+    void StartClimbing()
+    {
+        isClimbing = true;
+        agent.enabled = false;
+
+        // 걷기 상태가 유지되지 않도록 임시로 존재하지 않는 WalkType 값 할당
+        anim.SetInteger("WalkType", 5);
+        anim.SetTrigger("Climb");
+
+        // 지정한 시간(climbDuration) 뒤에 클라이밍 종료 함수 실행
+        Invoke("FinishClimbing", climbDuration);
+    }
+
+    void FinishClimbing()
+    {
+        isClimbing = false;
+        agent.enabled = true;
+        currentPoint++;
         MoveToNextPoint();
     }
 
@@ -93,9 +128,8 @@ public class MonsterAI : MonoBehaviour
     {
         if (waypoints.Length == 0) return;
 
-        int randomWalk = Random.Range(0, 3);
-        anim.SetInteger("WalkType", randomWalk);
-
+        // 다시 고유 걸음걸이로 복구 (Any State에서 자연스럽게 걷기로 넘어감)
+        anim.SetInteger("WalkType", myWalkType);
         agent.destination = waypoints[currentPoint].position;
     }
 
