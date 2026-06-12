@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class MonsterAI : MonoBehaviour
 {
@@ -12,25 +14,38 @@ public class MonsterAI : MonoBehaviour
     public float walkOutSpeed = 2.0f;
 
     [Header("Climb Settings")]
-    // 클라이밍을 실행할 웨이포인트 인덱스 (0이 첫 번째 웨이포인트)
     public int climbWaypointIndex = 1;
-    // 클라이밍(올라가기+내려오기) 애니메이션이 완전히 끝날 때까지 기다리는 시간
     public float climbDuration = 4.0f;
+
+    [Header("Jump Scare & UI Settings")]
+    // 카메라 자식으로 미리 세팅해둔 몬스터 오브젝트
+    public GameObject jumpScareMonster;
+    public AudioClip screamSound;
+    public GameObject gameOverUI;
 
     private int currentPoint = 0;
     private NavMeshAgent agent;
     private Animator anim;
+    private AudioSource audioSource;
+
     private bool isChasing = false;
     private bool isWalkingOut = false;
     private bool isClimbing = false;
+    private bool isGameOver = false;
 
-    // 고유 걸음걸이 저장용
     private int myWalkType;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+
+        // 시작할 때 UI와 깜툭튀용 몬스터는 숨김 처리
+        if (gameOverUI != null) gameOverUI.SetActive(false);
+        if (jumpScareMonster != null) jumpScareMonster.SetActive(false);
 
         myWalkType = Random.Range(0, 3);
         anim.SetInteger("WalkType", myWalkType);
@@ -47,7 +62,8 @@ public class MonsterAI : MonoBehaviour
 
     void Update()
     {
-        // 엘리베이터에서 나오거나 클라이밍 중일 때는 길찾기 업데이트 중지
+        if (isGameOver) return;
+
         if (isWalkingOut || isClimbing)
         {
             if (isWalkingOut)
@@ -74,7 +90,6 @@ public class MonsterAI : MonoBehaviour
             }
             else
             {
-                // 현재 도착한 곳이 지정한 클라이밍 위치라면 클라이밍 시작
                 if (currentPoint == climbWaypointIndex)
                 {
                     StartClimbing();
@@ -107,12 +122,8 @@ public class MonsterAI : MonoBehaviour
     {
         isClimbing = true;
         agent.enabled = false;
-
-        // 걷기 상태가 유지되지 않도록 임시로 존재하지 않는 WalkType 값 할당
         anim.SetInteger("WalkType", 5);
         anim.SetTrigger("Climb");
-
-        // 지정한 시간(climbDuration) 뒤에 클라이밍 종료 함수 실행
         Invoke("FinishClimbing", climbDuration);
     }
 
@@ -127,8 +138,6 @@ public class MonsterAI : MonoBehaviour
     void MoveToNextPoint()
     {
         if (waypoints.Length == 0) return;
-
-        // 다시 고유 걸음걸이로 복구 (Any State에서 자연스럽게 걷기로 넘어감)
         anim.SetInteger("WalkType", myWalkType);
         agent.destination = waypoints[currentPoint].position;
     }
@@ -142,11 +151,47 @@ public class MonsterAI : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isGameOver)
         {
-            agent.isStopped = true;
-            anim.SetTrigger("Attack");
-            Debug.Log("GameOver");
+            TriggerJumpScare();
         }
+    }
+
+    [ContextMenu("Test Jump Scare")]
+    void TriggerJumpScare()
+    {
+        isGameOver = true;
+        agent.enabled = false;
+
+        transform.position = new Vector3(0, -1000f, 0);
+
+        if (jumpScareMonster != null)
+        {
+            jumpScareMonster.SetActive(true);
+
+            // 진동 시간 3.0초, X축(좌우) 0.2 추가
+            jumpScareMonster.transform.DOShakePosition(3.0f, new Vector3(0.2f, 0.5f, 0.5f), 30, 90, false, true);
+        }
+
+        if (screamSound != null)
+        {
+            audioSource.PlayOneShot(screamSound);
+        }
+
+        // 진동 시간에 맞춰 UI 호출 시간을 3.5초로 연장
+        Invoke("ShowGameOverUI", 3.5f);
+    }
+
+    void ShowGameOverUI()
+    {
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(true);
+        }
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
