@@ -21,6 +21,7 @@ namespace Unseen.Interaction
         private GameObject exitPrompt;
         private Vector3 exitCameraPosition;
         private bool insideVent;
+        private bool wasClimbing;
 
         private void Awake()
         {
@@ -45,6 +46,13 @@ namespace Unseen.Interaction
 
             if (!insideVent)
             {
+                var isClimbingNow = climbInteractable.isSelected;
+                if (isClimbingNow != wasClimbing)
+                {
+                    wasClimbing = isClimbingNow;
+                    SoundStateManager.Instance?.SetClimbing(isClimbingNow);
+                }
+
                 TryEnterVent();
                 return;
             }
@@ -81,6 +89,10 @@ namespace Unseen.Interaction
             insideVent = true;
             climbInteractable.enabled = false;
             exitPrompt.SetActive(true);
+
+            SoundStateManager.Instance?.SetClimbing(false);
+            SoundStateManager.Instance?.SetInsideVent(true);
+            wasClimbing = false;
         }
 
         private void ExitVent()
@@ -89,6 +101,8 @@ namespace Unseen.Interaction
             insideVent = false;
             climbInteractable.enabled = true;
             exitPrompt.SetActive(false);
+
+            SoundStateManager.Instance?.SetInsideVent(false);
         }
 
         private void MoveCameraTo(Vector3 destination)
@@ -133,6 +147,8 @@ namespace Unseen.Interaction
 
         private void OnDestroy()
         {
+            SoundStateManager.Instance?.SetClimbing(false);
+            SoundStateManager.Instance?.SetInsideVent(false);
             exitAction?.Dispose();
         }
     }
