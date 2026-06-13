@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using Unity.XR.CoreUtils;
 using Unseen.Vision;
 
+[RequireComponent(typeof(AudioSource))]
 public class GameFlowManager : MonoBehaviour
 {
     // ─────────────────────────────────────────
@@ -51,6 +52,10 @@ public class GameFlowManager : MonoBehaviour
     [Tooltip("Stage4 엘리베이터 탑승 시 발동할 이벤트 (게임 클리어 UI 등)")]
     public UnityEvent onStage4Clear;
 
+    [Header("=== Audio Settings ===")]
+    [SerializeField] private AudioClip teleportSound;
+    [SerializeField] private AudioClip bgmClip;
+
     // ─────────────────────────────────────────
     //  프로퍼티 / 싱글톤
     // ─────────────────────────────────────────
@@ -63,6 +68,8 @@ public class GameFlowManager : MonoBehaviour
 
     private XROrigin xrOrigin;
     private Camera mainCamera;
+    private AudioSource audioSource;
+    private AudioSource bgmSource;
 
     // ─────────────────────────────────────────
     //  Unity 생명주기
@@ -73,8 +80,15 @@ public class GameFlowManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        xrOrigin   = FindFirstObjectByType<XROrigin>();
+        xrOrigin = FindFirstObjectByType<XROrigin>();
         mainCamera = Camera.main;
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+
+        bgmSource = gameObject.AddComponent<AudioSource>();
+        bgmSource.loop = true;
+        bgmSource.playOnAwake = false;
 
         // 모든 몬스터 비활성으로 시작
         SetMonsterActive(stage1Monster, false);
@@ -95,6 +109,13 @@ public class GameFlowManager : MonoBehaviour
     private void InitStage(GameState state)
     {
         currentState = state;
+
+        if (bgmClip != null && bgmSource != null)
+        {
+            bgmSource.clip = bgmClip;
+            bgmSource.Stop();
+            bgmSource.Play();
+        }
 
         // 모든 몬스터 먼저 끄기
         SetMonsterActive(stage1Monster, false);
@@ -224,7 +245,7 @@ public class GameFlowManager : MonoBehaviour
             GameState.Stage2 => stage2Elevator,
             GameState.Stage3 => stage3Elevator,
             GameState.Stage4 => stage4Elevator,
-            _                => null
+            _ => null
         };
     }
 
@@ -242,13 +263,19 @@ public class GameFlowManager : MonoBehaviour
         if (cam == null)
         {
             xrOrigin.transform.position = target.position;
-            return;
+        }
+        else
+        {
+            // XR Origin 전체를 이동해 카메라 위치를 target에 맞춤
+            var offset = target.position - cam.transform.position;
+            xrOrigin.transform.position += offset;
+            xrOrigin.transform.rotation = target.rotation;
         }
 
-        // XR Origin 전체를 이동해 카메라 위치를 target에 맞춤
-        var offset = target.position - cam.transform.position;
-        xrOrigin.transform.position += offset;
-        xrOrigin.transform.rotation  = target.rotation;
+        if (teleportSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(teleportSound);
+        }
     }
 
     private static void SetVisionMode(VisionMode mode)

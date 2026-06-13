@@ -3985,6 +3985,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1051827346}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: screamSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 0bdc904a61cfa4149b8e3867a3a77a71, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: walkOutTime
       value: 3
       objectReference: {fileID: 0}
@@ -3996,6 +4000,18 @@ PrefabInstance:
       propertyPath: climbDuration
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a779d3daeba6f9244a885f9e5c7c2263, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepVolume
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: chaseStartSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a5d34b6b01b14d043bfcc4fefd614224, type: 3}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: startInElevator
       value: 1
@@ -30488,7 +30504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundStateManager
   soundA: {fileID: 8300000, guid: 13154b84610589c4da24e41c1fd846a8, type: 3}
-  soundB: {fileID: 0}
+  soundB: {fileID: 8300000, guid: 417a5f674b9f8d44dade327d64d175b5, type: 3}
   soundC: {fileID: 8300000, guid: 33b718859aa28ce4db0f46d0dfe98b86, type: 3}
   soundD: {fileID: 8300000, guid: 13154b84610589c4da24e41c1fd846a8, type: 3}
   soundE: {fileID: 0}
@@ -86635,6 +86651,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1051827346}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: screamSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 0bdc904a61cfa4149b8e3867a3a77a71, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: walkOutTime
       value: 3
       objectReference: {fileID: 0}
@@ -86646,6 +86666,18 @@ PrefabInstance:
       propertyPath: climbDuration
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a779d3daeba6f9244a885f9e5c7c2263, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepVolume
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: chaseStartSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a5d34b6b01b14d043bfcc4fefd614224, type: 3}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: startInElevator
       value: 1
@@ -104357,6 +104389,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1051827346}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: screamSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 0bdc904a61cfa4149b8e3867a3a77a71, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: walkOutTime
       value: 3
       objectReference: {fileID: 0}
@@ -104368,6 +104404,18 @@ PrefabInstance:
       propertyPath: climbDuration
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a779d3daeba6f9244a885f9e5c7c2263, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepVolume
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: chaseStartSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a5d34b6b01b14d043bfcc4fefd614224, type: 3}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: startInElevator
       value: 1
@@ -107042,6 +107090,10 @@ PrefabInstance:
       propertyPath: footstepSound
       value: 
       objectReference: {fileID: 8300000, guid: a779d3daeba6f9244a885f9e5c7c2263, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepVolume
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: chaseStartSound
       value: 
@@ -113612,6 +113664,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2131545109}
   - component: {fileID: 2131545108}
+  - component: {fileID: 2131545110}
   m_Layer: 0
   m_Name: GameFlowManager
   m_TagString: Untagged
@@ -113650,6 +113703,8 @@ MonoBehaviour:
   onStage4Clear:
     m_PersistentCalls:
       m_Calls: []
+  teleportSound: {fileID: 8300000, guid: b4fdcac3ddce1a046ada4f636ed1dcf8, type: 3}
+  bgmClip: {fileID: 8300000, guid: 06bb5042ab38e8549a08edeff95019ec, type: 3}
 --- !u!4 &2131545109
 Transform:
   m_ObjectHideFlags: 0
@@ -113665,6 +113720,103 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &2131545110
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2131545107}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &2133045834
 PrefabInstance:
   m_ObjectHideFlags: 0

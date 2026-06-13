@@ -24,6 +24,7 @@ public class MonsterAI : MonoBehaviour
 
     [Header("Sound Settings")]
     public AudioClip footstepSound;
+    [Range(0f, 1f)] public float footstepVolume = 0.5f;
     public float walkStepInterval = 0.6f;
     public float runStepInterval = 0.3f;
     public AudioClip chaseStartSound;
@@ -137,7 +138,7 @@ public class MonsterAI : MonoBehaviour
                 stepTimer = 0f;
                 if (footstepSound != null)
                 {
-                    audioSource.PlayOneShot(footstepSound);
+                    audioSource.PlayOneShot(footstepSound, footstepVolume);
                 }
             }
         }
