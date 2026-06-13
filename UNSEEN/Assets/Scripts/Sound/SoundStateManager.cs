@@ -1,38 +1,42 @@
-using System.Collections;
 using UnityEngine;
 
-public class SoundStateManager : MonoBehaviour
+public class SoundStateManager : UnityEngine.MonoBehaviour
 {
     public enum SoundState
     {
-        OutsideBraille,   // 보도블럭 밖
-        OnBraille,        // 보도블럭 위
-        Climbing,         // 사다리 오르는 중
-        InsideVent        // 벤트 안
+        OutsideBraille,   // 보도블럭 밖 → 사운드 B
+        OnBraille,        // 보도블럭 위 → 사운드 A
+        Climbing,         // 사다리 오르는 중 → 사운드 C
+        InsideVent,       // 벤트 안 → 사운드 D
+        InsideElevator    // 엘리베이터 안 → 사운드 E
     }
 
-    [Header("=== Audio Clips ===")]
-    [Tooltip("A: 보도블럭 위에 있는 동안")]
-    [SerializeField] private AudioClip soundA;
-    [Tooltip("B: 보도블럭 밖에 있을 때")]
-    [SerializeField] private AudioClip soundB;
-    [Tooltip("C: 사다리 오르는 중")]
-    [SerializeField] private AudioClip soundC;
-    [Tooltip("D: 벤트 안에 있을 때")]
-    [SerializeField] private AudioClip soundD;
+    [UnityEngine.Header("=== Audio Clips ===")]
+    [UnityEngine.Tooltip("A: 보도블럭 위에 있는 동안")]
+    [UnityEngine.SerializeField] private UnityEngine.AudioClip soundA;
+    [UnityEngine.Tooltip("B: 보도블럭 밖에 있을 때")]
+    [UnityEngine.SerializeField] private UnityEngine.AudioClip soundB;
+    [UnityEngine.Tooltip("C: 사다리 오르는 중")]
+    [UnityEngine.SerializeField] private UnityEngine.AudioClip soundC;
+    [UnityEngine.Tooltip("D: 벤트 안에 있을 때")]
+    [UnityEngine.SerializeField] private UnityEngine.AudioClip soundD;
+    [UnityEngine.Tooltip("E: 엘리베이터 안에 있을 때")]
+    [UnityEngine.SerializeField] private UnityEngine.AudioClip soundE;
 
-    [Header("=== Interval Settings ===")]
-    [Tooltip("사운드 A 반복 간격 (초)")]
-    [SerializeField, Range(0.1f, 5f)] private float intervalA = 1f;
-    [Tooltip("사운드 B 반복 간격 (초)")]
-    [SerializeField, Range(0.1f, 5f)] private float intervalB = 2f;
-    [Tooltip("사운드 C 반복 간격 (초)")]
-    [SerializeField, Range(0.1f, 5f)] private float intervalC = 0.5f;
-    [Tooltip("사운드 D 반복 간격 (초)")]
-    [SerializeField, Range(0.1f, 5f)] private float intervalD = 1.5f;
+    [UnityEngine.Header("=== Interval Settings ===")]
+    [UnityEngine.Tooltip("사운드 A 반복 간격 (초)")]
+    [UnityEngine.SerializeField, UnityEngine.Range(0.1f, 5f)] private float intervalA = 1f;
+    [UnityEngine.Tooltip("사운드 B 반복 간격 (초)")]
+    [UnityEngine.SerializeField, UnityEngine.Range(0.1f, 5f)] private float intervalB = 2f;
+    [UnityEngine.Tooltip("사운드 C 반복 간격 (초)")]
+    [UnityEngine.SerializeField, UnityEngine.Range(0.1f, 5f)] private float intervalC = 0.5f;
+    [UnityEngine.Tooltip("사운드 D 반복 간격 (초)")]
+    [UnityEngine.SerializeField, UnityEngine.Range(0.1f, 5f)] private float intervalD = 1.5f;
+    [UnityEngine.Tooltip("사운드 E 반복 간격 (초)")]
+    [UnityEngine.SerializeField, UnityEngine.Range(0.1f, 5f)] private float intervalE = 2f;
 
-    [Header("=== Volume ===")]
-    [SerializeField, Range(0f, 1f)] private float volume = 1f;
+    [UnityEngine.Header("=== Volume ===")]
+    [UnityEngine.SerializeField, UnityEngine.Range(0f, 1f)] private float volume = 1f;
 
     // ─────────────────────────────────────────
     //  싱글톤
@@ -46,13 +50,14 @@ public class SoundStateManager : MonoBehaviour
     // ─────────────────────────────────────────
 
     private SoundState currentState = SoundState.OutsideBraille;
-    private AudioSource audioSource;
+    private UnityEngine.AudioSource audioSource;
     private float timer = 0f;
 
-    // 우선순위: InsideVent > Climbing > OnBraille > OutsideBraille
-    private bool isOnBraille  = false;
-    private bool isClimbing   = false;
-    private bool isInsideVent = false;
+    // 우선순위: InsideElevator > InsideVent > Climbing > OnBraille > OutsideBraille
+    private bool isOnBraille      = false;
+    private bool isClimbing       = false;
+    private bool isInsideVent     = false;
+    private bool isInsideElevator = false;
 
     // ─────────────────────────────────────────
     //  Unity 생명주기
@@ -63,12 +68,12 @@ public class SoundStateManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<UnityEngine.AudioSource>();
         if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource = gameObject.AddComponent<UnityEngine.AudioSource>();
 
         audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0f; // 2D 사운드 (플레이어 자신의 소리)
+        audioSource.spatialBlend = 0f;
     }
 
     private void Update()
@@ -78,11 +83,10 @@ public class SoundStateManager : MonoBehaviour
         {
             currentState = newState;
             timer = 0f;
-            // 상태 바뀌면 즉시 한 번 재생
             PlayCurrentSound();
         }
 
-        timer += Time.deltaTime;
+        timer += UnityEngine.Time.deltaTime;
         if (timer >= GetCurrentInterval())
         {
             timer = 0f;
@@ -91,26 +95,20 @@ public class SoundStateManager : MonoBehaviour
     }
 
     // ─────────────────────────────────────────
-    //  외부에서 상태 변경 (BrailleBlock / LadderVentTransition 에서 호출)
+    //  외부에서 상태 변경
     // ─────────────────────────────────────────
 
     /// <summary>BrailleBlock이 호출 — 보도블럭 위 여부</summary>
-    public void SetOnBraille(bool value)
-    {
-        isOnBraille = value;
-    }
+    public void SetOnBraille(bool value) => isOnBraille = value;
 
     /// <summary>LadderVentTransition이 호출 — 사다리 오르는 중 여부</summary>
-    public void SetClimbing(bool value)
-    {
-        isClimbing = value;
-    }
+    public void SetClimbing(bool value) => isClimbing = value;
 
     /// <summary>LadderVentTransition이 호출 — 벤트 안 여부</summary>
-    public void SetInsideVent(bool value)
-    {
-        isInsideVent = value;
-    }
+    public void SetInsideVent(bool value) => isInsideVent = value;
+
+    /// <summary>ElevatorBoardingZone이 호출 — 엘리베이터 안 여부</summary>
+    public void SetInsideElevator(bool value) => isInsideElevator = value;
 
     // ─────────────────────────────────────────
     //  내부 헬퍼
@@ -119,9 +117,10 @@ public class SoundStateManager : MonoBehaviour
     /// <summary>우선순위에 따라 현재 상태 결정</summary>
     private SoundState EvaluateState()
     {
-        if (isInsideVent) return SoundState.InsideVent;
-        if (isClimbing)   return SoundState.Climbing;
-        if (isOnBraille)  return SoundState.OnBraille;
+        if (isInsideElevator) return SoundState.InsideElevator;
+        if (isInsideVent)     return SoundState.InsideVent;
+        if (isClimbing)       return SoundState.Climbing;
+        if (isOnBraille)      return SoundState.OnBraille;
         return SoundState.OutsideBraille;
     }
 
@@ -132,7 +131,7 @@ public class SoundStateManager : MonoBehaviour
         audioSource.PlayOneShot(clip, volume);
     }
 
-    private AudioClip GetCurrentClip()
+    private UnityEngine.AudioClip GetCurrentClip()
     {
         return currentState switch
         {
@@ -140,6 +139,7 @@ public class SoundStateManager : MonoBehaviour
             SoundState.OutsideBraille => soundB,
             SoundState.Climbing       => soundC,
             SoundState.InsideVent     => soundD,
+            SoundState.InsideElevator => soundE,
             _                         => null
         };
     }
@@ -152,6 +152,7 @@ public class SoundStateManager : MonoBehaviour
             SoundState.OutsideBraille => intervalB,
             SoundState.Climbing       => intervalC,
             SoundState.InsideVent     => intervalD,
+            SoundState.InsideElevator => intervalE,
             _                         => 1f
         };
     }
