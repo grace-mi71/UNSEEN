@@ -3,9 +3,11 @@ guid: 5cbed1dce3d840249e2e53879dcf4774
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - elevator: {instanceID: 0}
+  - pressSound: {fileID: 8300000, guid: 706fd76a6d3ad4144b8c112a3af89094, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
-  userData:
-  assetBundleName:
-  assetBundleVariant:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

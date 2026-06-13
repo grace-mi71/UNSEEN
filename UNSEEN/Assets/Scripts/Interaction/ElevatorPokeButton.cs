@@ -1,18 +1,22 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 namespace Unseen.Interaction
 {
-    [RequireComponent(typeof(Collider), typeof(XRSimpleInteractable))]
+    [RequireComponent(typeof(Collider), typeof(XRSimpleInteractable), typeof(AudioSource))]
     public sealed class ElevatorPokeButton : MonoBehaviour
     {
         [SerializeField] private ElevatorController elevator;
         [SerializeField, Range(0.005f, 0.08f)] private float pressDistance = 0.035f;
 
+        [SerializeField] private AudioClip pressSound;
+
         private Vector3 releasedLocalPosition;
         private bool pressed;
         private XRSimpleInteractable interactable;
+        private AudioSource audioSource;
 
         public void Configure(ElevatorController targetElevator)
         {
@@ -34,6 +38,15 @@ namespace Unseen.Interaction
                 return;
 
             pressed = true;
+
+            // 버튼이 눌렸을 때 소리 한 번 재생
+            if (pressSound != null)
+            {
+                audioSource.PlayOneShot(pressSound);
+            }
+
+            transform.localPosition = releasedLocalPosition + Vector3.back * pressDistance;
+            elevator?.OpenDoor();
             transform.localPosition = releasedLocalPosition + Vector3.back * pressDistance;
             elevator?.OpenDoor();
         }
