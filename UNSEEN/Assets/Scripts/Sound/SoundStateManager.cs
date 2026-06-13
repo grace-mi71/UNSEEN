@@ -99,7 +99,11 @@ public class SoundStateManager : UnityEngine.MonoBehaviour
     // ─────────────────────────────────────────
 
     /// <summary>BrailleBlock이 호출 — 보도블럭 위 여부</summary>
-    public void SetOnBraille(bool value) => isOnBraille = value;
+    public void SetOnBraille(bool value)
+    {
+        UnityEngine.Debug.Log("보도블럭 감지 상태: " + value);
+        isOnBraille = value;
+    }
 
     /// <summary>LadderVentTransition이 호출 — 사다리 오르는 중 여부</summary>
     public void SetClimbing(bool value) => isClimbing = value;
@@ -127,8 +131,19 @@ public class SoundStateManager : UnityEngine.MonoBehaviour
     private void PlayCurrentSound()
     {
         var clip = GetCurrentClip();
-        if (clip == null) return;
-        audioSource.PlayOneShot(clip, volume);
+
+        // 재생할 클립이 없으면 현재 나고 있는 소리를 즉시 정지
+        if (clip == null)
+        {
+            audioSource.Stop();
+            return;
+        }
+
+        // PlayOneShot 대신, 오디오 소스에 클립을 직접 넣고 Play()를 호출
+        // 이렇게 하면 상태가 바뀌거나 인터벌이 돌 때 이전 소리가 뚝 끊기고 새 소리가 납니다.
+        audioSource.clip = clip;
+        audioSource.volume = volume;
+        audioSource.Play();
     }
 
     private UnityEngine.AudioClip GetCurrentClip()

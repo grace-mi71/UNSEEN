@@ -26731,6 +26731,7 @@ GameObject:
   m_Component:
   - component: {fileID: 525958855}
   - component: {fileID: 525958856}
+  - component: {fileID: 525958857}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Untagged
@@ -26775,6 +26776,8 @@ MonoBehaviour:
   openDuration: 2.5
   closeDuration: 2.5
   easeType: 7
+  openSound: {fileID: 8300000, guid: 88d9d62013b89a443882cf2ea257b5e8, type: 3}
+  closeSound: {fileID: 8300000, guid: 06d14581be2200d4e9d7b5186810e4c6, type: 3}
   onOpenStart:
     m_PersistentCalls:
       m_Calls:
@@ -26799,6 +26802,103 @@ MonoBehaviour:
   onCloseComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!82 &525958857
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525958854}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &527331786
 GameObject:
   m_ObjectHideFlags: 0
@@ -30387,14 +30487,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55b96a781e08ef247950e6a6196a481a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundStateManager
-  soundA: {fileID: 0}
+  soundA: {fileID: 8300000, guid: 13154b84610589c4da24e41c1fd846a8, type: 3}
   soundB: {fileID: 0}
-  soundC: {fileID: 0}
-  soundD: {fileID: 0}
-  intervalA: 1
-  intervalB: 2
+  soundC: {fileID: 8300000, guid: 33b718859aa28ce4db0f46d0dfe98b86, type: 3}
+  soundD: {fileID: 8300000, guid: 13154b84610589c4da24e41c1fd846a8, type: 3}
+  soundE: {fileID: 0}
+  intervalA: 0.5
+  intervalB: 1
   intervalC: 0.5
   intervalD: 1.5
+  intervalE: 0.5
   volume: 1
 --- !u!4 &588402506
 Transform:
@@ -33507,6 +33609,7 @@ GameObject:
   m_Component:
   - component: {fileID: 638125068}
   - component: {fileID: 638125069}
+  - component: {fileID: 638125070}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Untagged
@@ -33551,6 +33654,8 @@ MonoBehaviour:
   openDuration: 2.5
   closeDuration: 2.5
   easeType: 7
+  openSound: {fileID: 8300000, guid: 88d9d62013b89a443882cf2ea257b5e8, type: 3}
+  closeSound: {fileID: 8300000, guid: 06d14581be2200d4e9d7b5186810e4c6, type: 3}
   onOpenStart:
     m_PersistentCalls:
       m_Calls:
@@ -33575,6 +33680,103 @@ MonoBehaviour:
   onCloseComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!82 &638125070
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638125067}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &641564872
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44770,6 +44972,7 @@ GameObject:
   m_Component:
   - component: {fileID: 885319914}
   - component: {fileID: 885319915}
+  - component: {fileID: 885319916}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Untagged
@@ -44814,6 +45017,8 @@ MonoBehaviour:
   openDuration: 2.5
   closeDuration: 2.5
   easeType: 7
+  openSound: {fileID: 8300000, guid: 88d9d62013b89a443882cf2ea257b5e8, type: 3}
+  closeSound: {fileID: 8300000, guid: 06d14581be2200d4e9d7b5186810e4c6, type: 3}
   onOpenStart:
     m_PersistentCalls:
       m_Calls:
@@ -44838,6 +45043,103 @@ MonoBehaviour:
   onCloseComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!82 &885319916
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885319913}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &885779492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65223,7 +65525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6598815579406187037, guid: 18ddb545287c546e19cc77dc9fbb2189, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -70314,6 +70616,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1352268199}
   - component: {fileID: 1352268200}
+  - component: {fileID: 1352268201}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Untagged
@@ -70358,6 +70661,8 @@ MonoBehaviour:
   openDuration: 2.5
   closeDuration: 2.5
   easeType: 7
+  openSound: {fileID: 8300000, guid: 88d9d62013b89a443882cf2ea257b5e8, type: 3}
+  closeSound: {fileID: 8300000, guid: 06d14581be2200d4e9d7b5186810e4c6, type: 3}
   onOpenStart:
     m_PersistentCalls:
       m_Calls:
@@ -70382,6 +70687,103 @@ MonoBehaviour:
   onCloseComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!82 &1352268201
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352268198}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &1355604979
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -85398,11 +85800,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 711f2b027614fa04297ccf6aa397fe4d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8414899
+      value: -0.814
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 711f2b027614fa04297ccf6aa397fe4d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.3046198
+      value: -3.299
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 711f2b027614fa04297ccf6aa397fe4d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -106621,6 +107023,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1051827346}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: screamSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a5d34b6b01b14d043bfcc4fefd614224, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: walkOutTime
       value: 3
       objectReference: {fileID: 0}
@@ -106632,6 +107038,14 @@ PrefabInstance:
       propertyPath: climbDuration
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: footstepSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a779d3daeba6f9244a885f9e5c7c2263, type: 3}
+    - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
+      propertyPath: chaseStartSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 0bdc904a61cfa4149b8e3867a3a77a71, type: 3}
     - target: {fileID: 5169344154947861963, guid: 25cd37863964f774abcc916228f2d12d, type: 3}
       propertyPath: startInElevator
       value: 1

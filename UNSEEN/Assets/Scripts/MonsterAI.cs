@@ -18,10 +18,15 @@ public class MonsterAI : MonoBehaviour
     public float climbDuration = 4.0f;
 
     [Header("Jump Scare & UI Settings")]
-    // 카메라 자식으로 미리 세팅해둔 몬스터 오브젝트
     public GameObject jumpScareMonster;
     public AudioClip screamSound;
     public GameObject gameOverUI;
+
+    [Header("Sound Settings")]
+    public AudioClip footstepSound;
+    public float walkStepInterval = 0.6f;
+    public float runStepInterval = 0.3f;
+    public AudioClip chaseStartSound;
 
     private int currentPoint = 0;
     private NavMeshAgent agent;
@@ -34,6 +39,7 @@ public class MonsterAI : MonoBehaviour
     private bool isGameOver = false;
 
     private int myWalkType;
+    private float stepTimer = 0f;
 
     void Start()
     {
@@ -43,7 +49,6 @@ public class MonsterAI : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
 
-        // 시작할 때 UI와 깜툭튀용 몬스터는 숨김 처리
         if (gameOverUI != null) gameOverUI.SetActive(false);
         if (jumpScareMonster != null) jumpScareMonster.SetActive(false);
 
@@ -63,6 +68,9 @@ public class MonsterAI : MonoBehaviour
     void Update()
     {
         if (isGameOver) return;
+
+        // 매 프레임 발자국 소리 로직 처리
+        HandleFootsteps();
 
         if (isWalkingOut || isClimbing)
         {
@@ -100,6 +108,43 @@ public class MonsterAI : MonoBehaviour
                     MoveToNextPoint();
                 }
             }
+        }
+    }
+
+    // 몬스터가 움직이는지 판별하여 발자국 소리를 재생
+    void HandleFootsteps()
+    {
+        if (isClimbing) return;
+
+        bool isMoving = false;
+
+        if (isWalkingOut)
+        {
+            isMoving = true;
+        }
+        else if (agent.enabled && agent.velocity.sqrMagnitude > 0.01f)
+        {
+            isMoving = true;
+        }
+
+        if (isMoving)
+        {
+            stepTimer += Time.deltaTime;
+            float currentInterval = isChasing ? runStepInterval : walkStepInterval;
+
+            if (stepTimer >= currentInterval)
+            {
+                stepTimer = 0f;
+                if (footstepSound != null)
+                {
+                    audioSource.PlayOneShot(footstepSound);
+                }
+            }
+        }
+        else
+        {
+            // 멈춰있을 경우 타이머 초기화
+            stepTimer = 0f;
         }
     }
 
@@ -147,6 +192,12 @@ public class MonsterAI : MonoBehaviour
         isChasing = true;
         agent.speed = 4.0f;
         anim.SetInteger("WalkType", 3);
+
+        // 추격 시작 시 소리 한 번 재생
+        if (chaseStartSound != null)
+        {
+            audioSource.PlayOneShot(chaseStartSound);
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -168,8 +219,6 @@ public class MonsterAI : MonoBehaviour
         if (jumpScareMonster != null)
         {
             jumpScareMonster.SetActive(true);
-
-            // 진동 시간 3.0초, X축(좌우) 0.2 추가
             jumpScareMonster.transform.DOShakePosition(3.0f, new Vector3(0.2f, 0.5f, 0.5f), 30, 90, false, true);
         }
 
@@ -178,7 +227,6 @@ public class MonsterAI : MonoBehaviour
             audioSource.PlayOneShot(screamSound);
         }
 
-        // 진동 시간에 맞춰 UI 호출 시간을 3.5초로 연장
         Invoke("ShowGameOverUI", 3.5f);
     }
 

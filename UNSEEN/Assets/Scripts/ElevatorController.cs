@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 
+// 엘리베이터 문을 제어하고 소리를 재생하는 클래스
+[RequireComponent(typeof(AudioSource))]
 public class ElevatorController : MonoBehaviour
 {
     [Header("Door References")]
@@ -13,6 +15,11 @@ public class ElevatorController : MonoBehaviour
     public float openDuration = 1.5f;
     public float closeDuration = 1.5f;
     public Ease easeType = Ease.InOutQuad;
+
+    [Header("Audio Settings")]
+    public AudioClip openSound;
+    public AudioClip closeSound;
+    private AudioSource audioSource;
 
     [Header("Elevator Events")]
     public UnityEvent onOpenStart;
@@ -28,14 +35,26 @@ public class ElevatorController : MonoBehaviour
     {
         if (leftDoor != null) leftDoorClosedLocalPos = leftDoor.localPosition;
         if (rightDoor != null) rightDoorClosedLocalPos = rightDoor.localPosition;
+
+        // 오디오 소스 컴포넌트 가져오기 (없으면 자동 추가)
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
-    // 인스펙터 우클릭 테스트용 속성 추가
     [ContextMenu("Test Open Door")]
     public void OpenDoor()
     {
         if (isOpen) return;
         isOpen = true;
+
+        // 문이 열릴 때 소리 한 번 재생
+        if (openSound != null)
+        {
+            audioSource.PlayOneShot(openSound);
+        }
 
         onOpenStart?.Invoke();
 
@@ -52,6 +71,12 @@ public class ElevatorController : MonoBehaviour
     {
         if (!isOpen) return;
         isOpen = false;
+
+        // 문이 닫힐 때 소리 한 번 재생
+        if (closeSound != null)
+        {
+            audioSource.PlayOneShot(closeSound);
+        }
 
         onCloseStart?.Invoke();
 
