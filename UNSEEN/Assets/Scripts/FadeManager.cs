@@ -50,7 +50,7 @@ public class FadeManager : MonoBehaviour
     /// <summary>
     /// Stage4 클리어 후 호출 — delay초 대기 → 페이드 아웃 → 메인 메뉴로 이동
     /// </summary>
-    public void FadeAndGoToMainMenu(float delay = 0f, string sceneName = "MainMenu")
+    public void FadeAndGoToMainMenu(float delay = 0f, string sceneName = "Main")
     {
         StartCoroutine(FadeOutThenLoad(delay, reloadScene: false, sceneName: sceneName));
     }

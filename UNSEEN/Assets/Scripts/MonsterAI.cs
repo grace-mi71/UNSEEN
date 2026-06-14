@@ -17,10 +17,9 @@ public class MonsterAI : MonoBehaviour
     public int climbWaypointIndex = 1;
     public float climbDuration = 4.0f;
 
-    [Header("Jump Scare & UI Settings")]
+    [Header("Jump Scare Settings")]
     public GameObject jumpScareMonster;
     public AudioClip screamSound;
-    public GameObject gameOverUI;
 
     [Header("Sound Settings")]
     public AudioClip footstepSound;
@@ -50,59 +49,45 @@ public class MonsterAI : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
 
-        if (gameOverUI != null) gameOverUI.SetActive(false);
         if (jumpScareMonster != null) jumpScareMonster.SetActive(false);
 
         myWalkType = Random.Range(0, 3);
         anim.SetInteger("WalkType", myWalkType);
 
         if (startInElevator)
-        {
             StartWalkOut();
-        }
         else
-        {
             MoveToNextPoint();
-        }
     }
 
     void Update()
     {
         if (isGameOver) return;
 
-        // �� ������ ���ڱ� �Ҹ� ���� ó��
         HandleFootsteps();
 
         if (isWalkingOut || isClimbing)
         {
             if (isWalkingOut)
-            {
                 transform.Translate(Vector3.forward * walkOutSpeed * Time.deltaTime);
-            }
             return;
         }
 
         if (isChasing)
         {
             if (player != null)
-            {
                 agent.destination = player.position;
-            }
             return;
         }
 
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
             if (currentPoint == waypoints.Length - 1)
-            {
                 StartChasing();
-            }
             else
             {
                 if (currentPoint == climbWaypointIndex)
-                {
                     StartClimbing();
-                }
                 else
                 {
                     currentPoint++;
@@ -112,39 +97,26 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
-    // ���Ͱ� �����̴��� �Ǻ��Ͽ� ���ڱ� �Ҹ��� ���
     void HandleFootsteps()
     {
         if (isClimbing) return;
 
-        bool isMoving = false;
-
-        if (isWalkingOut)
-        {
-            isMoving = true;
-        }
-        else if (agent.enabled && agent.velocity.sqrMagnitude > 0.01f)
-        {
-            isMoving = true;
-        }
+        bool isMoving = isWalkingOut ||
+                        (agent.enabled && agent.velocity.sqrMagnitude > 0.01f);
 
         if (isMoving)
         {
             stepTimer += Time.deltaTime;
             float currentInterval = isChasing ? runStepInterval : walkStepInterval;
-
             if (stepTimer >= currentInterval)
             {
                 stepTimer = 0f;
                 if (footstepSound != null)
-                {
                     audioSource.PlayOneShot(footstepSound, footstepVolume);
-                }
             }
         }
         else
         {
-            // �������� ��� Ÿ�̸� �ʱ�ȭ
             stepTimer = 0f;
         }
     }
@@ -194,19 +166,14 @@ public class MonsterAI : MonoBehaviour
         agent.speed = 4.0f;
         anim.SetInteger("WalkType", 3);
 
-        // �߰� ���� �� �Ҹ� �� �� ���
         if (chaseStartSound != null)
-        {
             audioSource.PlayOneShot(chaseStartSound);
-        }
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !isGameOver)
-        {
             TriggerJumpScare();
-        }
     }
 
     [ContextMenu("Test Jump Scare")]
@@ -224,19 +191,15 @@ public class MonsterAI : MonoBehaviour
         }
 
         if (screamSound != null)
-        {
             audioSource.PlayOneShot(screamSound);
-        }
 
-        Invoke("ShowGameOverUI", 3.5f);
+        // 3초 뒤 페이드 아웃 → 현재 스테이지 재시작
+        Invoke("TriggerFadeRestart", 3f);
     }
 
-    void ShowGameOverUI()
+    void TriggerFadeRestart()
     {
-        if (gameOverUI != null)
-        {
-            gameOverUI.SetActive(true);
-        }
+        FadeManager.Instance?.FadeAndGoToMainMenu(0f);
     }
 
     public void RestartGame()
