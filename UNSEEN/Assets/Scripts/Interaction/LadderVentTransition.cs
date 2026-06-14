@@ -2,16 +2,23 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 namespace Unseen.Interaction
 {
     [RequireComponent(typeof(Collider), typeof(UnityEngine.XR.Interaction.Toolkit.Locomotion.Climbing.ClimbInteractable))]
+    [RequireComponent(typeof(AudioSource))] // 오디오 소스 자동 추가
     public sealed class LadderVentTransition : MonoBehaviour
     {
         [SerializeField, Range(0.1f, 1f)] private float topThreshold = 0.35f;
         [SerializeField, Range(0.5f, 2f)] private float ventDepth = 0.9f;
         [SerializeField, Range(0.5f, 2f)] private float exitDistance = 1f;
+
+        // 사다리를 잡을 때 재생할 소리
+        [Header("=== Audio Settings ===")]
+        [SerializeField] private AudioClip grabSound;
+        [SerializeField, Range(0f, 1f)] private float grabVolume = 1f;
 
         private XROrigin xrOrigin;
         private Camera targetCamera;
@@ -23,12 +30,19 @@ namespace Unseen.Interaction
         private bool insideVent;
         private bool wasClimbing;
 
+        private AudioSource audioSource;
+
         private void Awake()
         {
             xrOrigin = FindFirstObjectByType<XROrigin>();
             targetCamera = Camera.main;
             ladderCollider = GetComponent<Collider>();
             climbInteractable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Locomotion.Climbing.ClimbInteractable>();
+
+            audioSource = GetComponent<AudioSource>();
+
+            // 그랩 이벤트 리스너 등록
+            climbInteractable.selectEntered.AddListener(OnGrabbed);
 
             exitAction = new InputAction("Exit Vent", InputActionType.Button);
             exitAction.AddBinding("<XRController>{RightHand}/primaryButton");
@@ -145,8 +159,23 @@ namespace Unseen.Interaction
             exitPrompt.transform.rotation = Quaternion.LookRotation(exitPrompt.transform.position - cameraTransform.position);
         }
 
+        // 그랩 이벤트 발생 시 실행되는 메서드
+        private void OnGrabbed(SelectEnterEventArgs args)
+        {
+            if (grabSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(grabSound, grabVolume);
+            }
+        }
+
         private void OnDestroy()
         {
+            if (climbInteractable != null)
+            {
+                // 그랩 이벤트 리스너 해제
+                climbInteractable.selectEntered.RemoveListener(OnGrabbed);
+            }
+
             SoundStateManager.Instance?.SetClimbing(false);
             SoundStateManager.Instance?.SetInsideVent(false);
             exitAction?.Dispose();

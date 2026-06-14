@@ -44,6 +44,10 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private AudioClip teleportSound;
     [SerializeField] private AudioClip bgmClip;
 
+    [Header("=== Mixer Settings ===")]
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup bgmMixerGroup;
+
     public static GameFlowManager Instance { get; private set; }
     public GameState CurrentState => currentState;
 
@@ -58,13 +62,16 @@ public class GameFlowManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        xrOrigin   = FindFirstObjectByType<XROrigin>();
+        xrOrigin = FindFirstObjectByType<XROrigin>();
         mainCamera = Camera.main;
 
         audioSource = GetComponent<AudioSource>();
-        bgmSource   = gameObject.AddComponent<AudioSource>();
-        bgmSource.loop       = true;
+        if (sfxMixerGroup != null) audioSource.outputAudioMixerGroup = sfxMixerGroup;
+
+        bgmSource = gameObject.AddComponent<AudioSource>();
+        bgmSource.loop = true;
         bgmSource.playOnAwake = false;
+        if (bgmMixerGroup != null) bgmSource.outputAudioMixerGroup = bgmMixerGroup;
 
         SetMonsterActive(stage1Monster, false);
         SetMonsterActive(stage2Monster, false);
@@ -189,7 +196,7 @@ public class GameFlowManager : MonoBehaviour
             GameState.Stage2 => stage2Elevator,
             GameState.Stage3 => stage3Elevator,
             GameState.Stage4 => stage4Elevator,
-            _                => null
+            _ => null
         };
     }
 
@@ -210,7 +217,7 @@ public class GameFlowManager : MonoBehaviour
         {
             var offset = target.position - cam.transform.position;
             xrOrigin.transform.position += offset;
-            xrOrigin.transform.rotation  = target.rotation;
+            xrOrigin.transform.rotation = target.rotation;
         }
 
         if (teleportSound != null && audioSource != null)
