@@ -8,9 +8,9 @@ public sealed class BrailleBlockSound : MonoBehaviour
 
     private int playerCount = 0;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (!collision.collider.CompareTag(playerTag))
+        if (!other.CompareTag(playerTag))
             return;
 
         playerCount++;
@@ -18,9 +18,9 @@ public sealed class BrailleBlockSound : MonoBehaviour
             SoundStateManager.Instance?.SetOnBraille(true);
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (!collision.collider.CompareTag(playerTag))
+        if (!other.CompareTag(playerTag))
             return;
 
         playerCount = Mathf.Max(0, playerCount - 1);
