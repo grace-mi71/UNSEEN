@@ -1,30 +1,53 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public sealed class BrailleBlockSound : MonoBehaviour
 {
-    [Tooltip("플레이어 태그")]
     [SerializeField] private string playerTag = "Player";
+    [SerializeField] private float detectionHeight = 0.5f;
 
-    private int playerCount = 0;
+    private bool playerIsOn = false;
+    private Transform playerTransform;
+    private Collider[] brailleColliders; // 자식 전체 Collider
 
-    private void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if (!other.CompareTag(playerTag))
-            return;
+        // 자식 포함 모든 Collider 수집
+        brailleColliders = GetComponentsInChildren<Collider>();
 
-        playerCount++;
-        if (playerCount == 1)
-            SoundStateManager.Instance?.SetOnBraille(true);
+        var playerObj = GameObject.FindWithTag(playerTag);
+        if (playerObj != null)
+            playerTransform = playerObj.transform;
     }
 
-    private void OnTriggerExit(Collider other)
+    private void Update()
     {
-        if (!other.CompareTag(playerTag))
+        if (playerTransform == null || brailleColliders == null)
             return;
 
-        playerCount = Mathf.Max(0, playerCount - 1);
-        if (playerCount == 0)
+        var playerPos = playerTransform.position;
+        bool isAboveAny = false;
+
+        foreach (var col in brailleColliders)
+        {
+            var bounds = col.bounds;
+
+            bool isAbove = playerPos.x >= bounds.min.x && playerPos.x <= bounds.max.x &&
+                           playerPos.z >= bounds.min.z && playerPos.z <= bounds.max.z &&
+                           playerPos.y >= bounds.max.y - 0.1f &&
+                           playerPos.y <= bounds.max.y + detectionHeight;
+
+            if (isAbove) { isAboveAny = true; break; }
+        }
+
+        if (isAboveAny && !playerIsOn)
+        {
+            playerIsOn = true;
+            SoundStateManager.Instance?.SetOnBraille(true);
+        }
+        else if (!isAboveAny && playerIsOn)
+        {
+            playerIsOn = false;
             SoundStateManager.Instance?.SetOnBraille(false);
+        }
     }
 }
