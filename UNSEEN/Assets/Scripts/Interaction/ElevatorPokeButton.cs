@@ -28,6 +28,7 @@ namespace Unseen.Interaction
             releasedLocalPosition = transform.localPosition;
             GetComponent<Collider>().isTrigger = false;
             interactable = GetComponent<XRSimpleInteractable>();
+            audioSource = GetComponent<AudioSource>();
             interactable.selectEntered.AddListener(OnPressed);
             interactable.selectExited.AddListener(OnReleased);
         }
@@ -39,7 +40,7 @@ namespace Unseen.Interaction
 
             pressed = true;
 
-            // ¹öÆ°ÀÌ ´­·ÈÀ» ¶§ ¼Ò¸® ÇÑ ¹ø Àç»ý
+            // ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
             if (pressSound != null)
             {
                 audioSource.PlayOneShot(pressSound);

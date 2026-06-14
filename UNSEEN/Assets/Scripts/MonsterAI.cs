@@ -70,7 +70,7 @@ public class MonsterAI : MonoBehaviour
     {
         if (isGameOver) return;
 
-        // ¸Å ÇÁ·¹ÀÓ ¹ßÀÚ±¹ ¼Ò¸® ·ÎÁ÷ Ã³¸®
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú±ï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         HandleFootsteps();
 
         if (isWalkingOut || isClimbing)
@@ -112,7 +112,7 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
-    // ¸ó½ºÅÍ°¡ ¿òÁ÷ÀÌ´ÂÁö ÆÇº°ÇÏ¿© ¹ßÀÚ±¹ ¼Ò¸®¸¦ Àç»ý
+    // ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½Çºï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½Ú±ï¿½ ï¿½Ò¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     void HandleFootsteps()
     {
         if (isClimbing) return;
@@ -144,7 +144,7 @@ public class MonsterAI : MonoBehaviour
         }
         else
         {
-            // ¸ØÃçÀÖÀ» °æ¿ì Å¸ÀÌ¸Ó ÃÊ±âÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½Ê±ï¿½È­
             stepTimer = 0f;
         }
     }
@@ -194,7 +194,7 @@ public class MonsterAI : MonoBehaviour
         agent.speed = 4.0f;
         anim.SetInteger("WalkType", 3);
 
-        // Ãß°Ý ½ÃÀÛ ½Ã ¼Ò¸® ÇÑ ¹ø Àç»ý
+        // ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (chaseStartSound != null)
         {
             audioSource.PlayOneShot(chaseStartSound);

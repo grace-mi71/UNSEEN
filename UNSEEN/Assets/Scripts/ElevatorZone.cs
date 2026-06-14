@@ -1,41 +1,57 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public sealed class ElevatorZone : MonoBehaviour
 {
     [Tooltip("이 탑승 존이 속한 스테이지")]
     [SerializeField] private GameFlowManager.GameState belongsToStage = GameFlowManager.GameState.Stage1;
 
-    [Tooltip("플레이어 태그 (기본: Player)")]
+    [Tooltip("플레이어 태그")]
     [SerializeField] private string playerTag = "Player";
 
-    private bool hasTriggeredTransition = false;
+    [Tooltip("감지 반경 (Inspector에서 Scene뷰 기즈모로 확인 가능)")]
+    [SerializeField] private float detectionRadius = 3f;
 
-    private void Reset()
+    private bool hasTriggeredTransition = false;
+    private bool playerIsInside = false;
+    private Transform playerTransform;
+
+    private void Start()
     {
-        GetComponent<Collider>().isTrigger = true;
+        var cam = Camera.main;
+        if (cam != null)
+            playerTransform = cam.transform;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (!other.CompareTag(playerTag))
+        if (playerTransform == null)
             return;
 
-        SoundStateManager.Instance?.SetInsideElevator(true);
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        bool isInside = distance <= detectionRadius;
 
-        // 스테이지 전환은 한 번만
-        if (!hasTriggeredTransition)
+        if (isInside && !playerIsInside)
         {
-            hasTriggeredTransition = true;
-            GameFlowManager.Instance?.OnPlayerBoardedElevator(belongsToStage);
+            playerIsInside = true;
+            SoundStateManager.Instance?.SetInsideElevator(true);
+
+            if (!hasTriggeredTransition)
+            {
+                hasTriggeredTransition = true;
+                GameFlowManager.Instance?.OnPlayerBoardedElevator(belongsToStage);
+            }
+        }
+        else if (!isInside && playerIsInside)
+        {
+            playerIsInside = false;
+            SoundStateManager.Instance?.SetInsideElevator(false);
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    // Scene뷰에서 감지 범위 시각화
+    private void OnDrawGizmos()
     {
-        if (!other.CompareTag(playerTag))
-            return;
-
-        SoundStateManager.Instance?.SetInsideElevator(false);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }
