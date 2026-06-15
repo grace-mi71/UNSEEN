@@ -11,14 +11,38 @@ public class AudioSettingsManager : MonoBehaviour
     public Slider bgmSlider;
     public Slider sfxSlider;
 
-    // ³ëÃâÇÑ ÆÄ¶ó¹ÌÅÍ ÀÌ¸§°ú Á¤È®È÷ ÀÏÄ¡ÇØ¾ß ÇÕ´Ï´Ù.
+    [Header("Audio")]
+    public AudioClip bgmClip;
+    public AudioClip sfxClip;
+    private AudioSource bgmSource;
+    private AudioSource sfxSource;
+
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½È®ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Ø¾ï¿½ ï¿½Õ´Ï´ï¿½.
     private const string BgmVolumeParam = "BGMVolume";
     private const string SfxVolumeParam = "SFXVolume";
 
+    private void Awake()
+    {
+        bgmSource = gameObject.AddComponent<AudioSource>();
+        bgmSource.loop = true;
+        bgmSource.clip = bgmClip;
+        bgmSource.outputAudioMixerGroup = mainMixer.FindMatchingGroups("BGM")[0];
+        bgmSource.Play();
+
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.outputAudioMixerGroup = mainMixer.FindMatchingGroups("SFX")[0];
+    }
+
+    public void PlayButtonSFX()
+    {
+        if (sfxClip != null)
+            sfxSource.PlayOneShot(sfxClip);
+    }
+
     private void Start()
     {
-        // ½½¶óÀÌ´õ ÃÊ±â ¼³Á¤
-        // ¹Í¼­ º¼·ý °è»ê ½Ã Log10(0)Àº ¹«ÇÑ´ë°¡ µÇ¹Ç·Î ÃÖ¼Ò°ªÀ» 0.0001·Î Àâ½À´Ï´Ù.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½Í¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ Log10(0)ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ë°¡ ï¿½Ç¹Ç·ï¿½ ï¿½Ö¼Ò°ï¿½ï¿½ï¿½ 0.0001ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
 
         if (bgmSlider != null)
         {
