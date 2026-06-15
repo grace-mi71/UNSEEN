@@ -3,10 +3,9 @@ guid: 941bf282629d4206b802d4077ca70f08
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - grabSound: {fileID: 8300000, guid: 33b718859aa28ce4db0f46d0dfe98b86, type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: vent-transition-v1
-  assetBundleName: 
-  assetBundleVariant: 
+  assetBundleName:
+  assetBundleVariant:
