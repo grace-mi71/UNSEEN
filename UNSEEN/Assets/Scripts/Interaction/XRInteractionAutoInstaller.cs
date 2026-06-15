@@ -8,6 +8,7 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit.Filtering;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -32,7 +33,11 @@ namespace Unseen.Interaction
 
         internal static void ConfigureHardwareRig()
         {
-            var xrOrigin = UnityEngine.Object.FindFirstObjectByType<XROrigin>();
+            ConfigureHardwareRig(FindActiveSceneOrigin());
+        }
+
+        internal static void ConfigureHardwareRig(XROrigin xrOrigin)
+        {
             if (xrOrigin == null)
                 return;
 
@@ -110,7 +115,7 @@ namespace Unseen.Interaction
 
         private static void InstallLadders()
         {
-            var xrOrigin = UnityEngine.Object.FindFirstObjectByType<XROrigin>();
+            var xrOrigin = FindActiveSceneOrigin();
             if (xrOrigin == null)
                 return;
 
@@ -149,6 +154,20 @@ namespace Unseen.Interaction
                     debugVisual = ladder.AddComponent<XRInteractionDebugVisual>();
                 debugVisual.Configure(new Color(0.4f, 0.4f, 0.4f), new Color(1f, 0.75f, 0.05f), new Color(0.1f, 1f, 0.25f));
             }
+        }
+
+        internal static XROrigin FindActiveSceneOrigin()
+        {
+            var activeScene = SceneManager.GetActiveScene();
+            foreach (var origin in UnityEngine.Object.FindObjectsByType<XROrigin>(
+                         FindObjectsInactive.Exclude,
+                         FindObjectsSortMode.None))
+            {
+                if (origin.gameObject.scene == activeScene)
+                    return origin;
+            }
+
+            return null;
         }
 
         private static void InstallElevatorButtons()

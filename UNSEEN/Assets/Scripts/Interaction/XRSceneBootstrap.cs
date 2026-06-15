@@ -23,19 +23,26 @@ namespace Unseen.Interaction
         private IEnumerator Start()
         {
             var playerRealigned = false;
+            var xrOrigin = XRInteractionAutoInstaller.FindActiveSceneOrigin();
+            if (xrOrigin == null)
+            {
+                Destroy(gameObject);
+                yield break;
+            }
 
             ConfigureSimulatorForCurrentEnvironment();
+            // Wait until all objects from the previous scene have completed OnDisable.
+            yield return new WaitForEndOfFrame();
             yield return null;
-            ForceRebindHardwareRig();
+            ForceRebindHardwareRig(xrOrigin);
 
             // The previous scene's InputActionManager can disable the shared action asset
             // after the new scene starts. Re-enable it across the transition window.
             for (var frame = 0; frame < 120; frame++)
             {
-                ConfigureTrackingOrigin();
-                XRInteractionAutoInstaller.ConfigureHardwareRig();
+                ConfigureTrackingOrigin(xrOrigin);
+                XRInteractionAutoInstaller.ConfigureHardwareRig(xrOrigin);
 
-                var xrOrigin = FindFirstObjectByType<XROrigin>();
                 var actionManager = xrOrigin != null ? xrOrigin.GetComponent<InputActionManager>() : null;
                 if (actionManager != null)
                 {
@@ -74,9 +81,8 @@ namespace Unseen.Interaction
             }
         }
 
-        private static void ForceRebindHardwareRig()
+        private static void ForceRebindHardwareRig(XROrigin xrOrigin)
         {
-            var xrOrigin = FindFirstObjectByType<XROrigin>();
             if (xrOrigin == null)
                 return;
 
@@ -102,10 +108,10 @@ namespace Unseen.Interaction
                 poseDriver.enabled = true;
             }
 
-            XRInteractionAutoInstaller.ConfigureHardwareRig();
+            XRInteractionAutoInstaller.ConfigureHardwareRig(xrOrigin);
         }
 
-        private void ConfigureTrackingOrigin()
+        private void ConfigureTrackingOrigin(XROrigin xrOrigin)
         {
             inputSubsystems.Clear();
             SubsystemManager.GetSubsystems(inputSubsystems);
@@ -115,7 +121,6 @@ namespace Unseen.Interaction
                     subsystem.TrySetTrackingOriginMode(TrackingOriginModeFlags.Device);
             }
 
-            var xrOrigin = FindFirstObjectByType<XROrigin>();
             if (xrOrigin == null)
                 return;
 

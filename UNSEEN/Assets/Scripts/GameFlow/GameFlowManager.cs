@@ -7,6 +7,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Unity.XR.CoreUtils;
+using Unseen.Interaction;
 using Unseen.Vision;
 
 [RequireComponent(typeof(AudioSource))]
@@ -67,8 +68,8 @@ public class GameFlowManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        xrOrigin = FindFirstObjectByType<XROrigin>();
-        mainCamera = Camera.main;
+        xrOrigin = XRInteractionAutoInstaller.FindActiveSceneOrigin();
+        mainCamera = xrOrigin != null && xrOrigin.Camera != null ? xrOrigin.Camera : Camera.main;
 
         audioSource = GetComponent<AudioSource>();
         if (sfxMixerGroup != null) audioSource.outputAudioMixerGroup = sfxMixerGroup;
