@@ -7,23 +7,29 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class TitleUIManager : MonoBehaviour
+public class TitleManager : MonoBehaviour
 {
-    [SerializeField] private Button gameStartBtn;
-    [SerializeField] private Button exitBtn;
+    public GameObject titleUI;
+    public GameObject settingUI;
 
-    void Start()
-    {
-        gameStartBtn.onClick.AddListener(OnGameStart);
-        exitBtn.onClick.AddListener(OnExit);
-    }
-
-    private void OnGameStart()
+    public void OnPlayButton()
     {
         SceneManager.LoadScene("Main");
     }
 
-    private void OnExit()
+    public void OnSettingButton()
+    {
+        titleUI.SetActive(false);
+        settingUI.SetActive(true);
+    }
+
+    public void OnCloseSettingButton()
+    {
+        settingUI.SetActive(false);
+        titleUI.SetActive(true);
+    }
+
+    public void OnExitButton()
     {
         Application.Quit();
     }

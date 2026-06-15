@@ -113824,7 +113824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12f6b2c6dc660c941b2d25ceab061fe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowManager
-  currentState: 3
+  currentState: 0
   startPoint1: {fileID: 1915968798}
   startPoint2: {fileID: 716770994}
   startPoint3: {fileID: 914212448}
