@@ -1,3 +1,8 @@
+/*
+ * Owner: Gangmin Lee, Haejun Lee
+ * Function of this code: Moves the XR player from a climbed ladder into a vent and provides an input-driven vent exit.
+ * Additional notes: The ladder collider bounds define the entry and exit positions.
+ */
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;

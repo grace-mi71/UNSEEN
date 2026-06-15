@@ -1,3 +1,8 @@
+/*
+ * Owner: Gangmin Lee
+ * Function of this code: Configures XR hardware and installs ladder, poke, elevator-button, and debug interactions at runtime.
+ * Additional notes: Installation runs after each scene load and relies on established object naming conventions.
+ */
 using System;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -28,28 +33,45 @@ namespace Unseen.Interaction
             if (xrOrigin == null)
                 return;
 
-            // Device mode applies a consistent standing-height offset on real headsets.
-            xrOrigin.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Device;
-            xrOrigin.CameraYOffset = 2.05f;
+            foreach (var device in InputSystem.devices)
+            {
+                if (device is TrackedDevice && !device.enabled)
+                    InputSystem.EnableDevice(device);
+            }
 
             var actionManager = xrOrigin.GetComponent<InputActionManager>();
-            var cameraPoseDriver = xrOrigin.Camera?.GetComponent<TrackedPoseDriver>();
-            if (cameraPoseDriver != null && actionManager != null && actionManager.actionAssets.Count > 0)
+            if (actionManager != null)
             {
-                var actionAsset = actionManager.actionAssets[0];
-                cameraPoseDriver.positionInput = CreateActionProperty(actionAsset, "XRI Head/Position");
-                cameraPoseDriver.rotationInput = CreateActionProperty(actionAsset, "XRI Head/Rotation");
-                cameraPoseDriver.trackingStateInput = CreateActionProperty(actionAsset, "XRI Head/Tracking State");
-                cameraPoseDriver.enabled = true;
+                actionManager.enabled = true;
+                foreach (var actionAsset in actionManager.actionAssets)
+                    actionAsset?.Enable();
             }
+
+            var cameraPoseDriver = xrOrigin.Camera?.GetComponent<TrackedPoseDriver>();
+            if (cameraPoseDriver != null)
+                cameraPoseDriver.enabled = true;
 
             foreach (var child in xrOrigin.GetComponentsInChildren<Transform>(true))
             {
                 if (child.name == "Left Controller")
-                    CreateControllerVisual(child, new Color(0.08f, 0.45f, 0.9f));
+                    RestoreController(child, new Color(0.08f, 0.45f, 0.9f));
                 else if (child.name == "Right Controller")
-                    CreateControllerVisual(child, new Color(0.9f, 0.28f, 0.08f));
+                    RestoreController(child, new Color(0.9f, 0.28f, 0.08f));
             }
+        }
+
+        private static void RestoreController(Transform controller, Color color)
+        {
+            controller.gameObject.SetActive(true);
+
+            var poseDriver = controller.GetComponent<TrackedPoseDriver>();
+            if (poseDriver != null)
+                poseDriver.enabled = true;
+
+            CreateControllerVisual(controller, color);
+            var visual = controller.Find("Controller Visual");
+            if (visual != null)
+                visual.gameObject.SetActive(true);
         }
 
         private static void CreateControllerVisual(Transform controller, Color color)
@@ -183,14 +205,6 @@ namespace Unseen.Interaction
                 grabCollider.radius = 0.1f;
         }
 
-        private static InputActionProperty CreateActionProperty(InputActionAsset asset, string actionName)
-        {
-            var action = asset.FindAction(actionName);
-            return action == null
-                ? new InputActionProperty()
-                : new InputActionProperty(InputActionReference.Create(action));
-        }
-
         private static ClimbSettingsDatumProperty CreateFreeClimbSettings()
         {
             return new ClimbSettingsDatumProperty(new ClimbSettings
@@ -243,5 +257,6 @@ namespace Unseen.Interaction
             var debugVisual = key.AddComponent<XRInteractionDebugVisual>();
             debugVisual.Configure(new Color(0.65f, 0.12f, 0.04f), new Color(1f, 0.65f, 0.05f), new Color(0.1f, 1f, 0.25f));
         }
+
     }
 }

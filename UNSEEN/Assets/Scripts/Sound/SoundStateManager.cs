@@ -1,14 +1,19 @@
+/*
+ * Owner: Eunyeong Choi, Haejun Lee
+ * Function of this code: Selects and repeats environmental guidance audio based on the player's current context.
+ * Additional notes: State priority is elevator, vent, climbing, braille block, then outside braille.
+ */
 using UnityEngine;
 
 public class SoundStateManager : UnityEngine.MonoBehaviour
 {
     public enum SoundState
     {
-        OutsideBraille,   // 보도블럭 밖 → 사운드 B
-        OnBraille,        // 보도블럭 위 → 사운드 A
-        Climbing,         // 사다리 오르는 중 → 사운드 C
-        InsideVent,       // 벤트 안 → 사운드 D
-        InsideElevator    // 엘리베이터 안 → 사운드 E
+        OutsideBraille,   // Sound B
+        OnBraille,        // Sound A
+        Climbing,         // Sound C
+        InsideVent,       // Sound D
+        InsideElevator    // Sound E
     }
 
     [UnityEngine.Header("=== Audio Clips ===")]
@@ -38,30 +43,30 @@ public class SoundStateManager : UnityEngine.MonoBehaviour
     [UnityEngine.Header("=== Volume ===")]
     [UnityEngine.SerializeField, UnityEngine.Range(0f, 1f)] private float volume = 1f;
 
-    // ─────────────────────────────────────────
-    //  싱글톤
-    // ─────────────────────────────────────────
+    // -----------------------------------------------------------------------------
+    //  Singleton
+    // -----------------------------------------------------------------------------
 
     public static SoundStateManager Instance { get; private set; }
     public SoundState CurrentState => currentState;
 
-    // ─────────────────────────────────────────
-    //  내부 상태
-    // ─────────────────────────────────────────
+    // -----------------------------------------------------------------------------
+    //  Internal state
+    // -----------------------------------------------------------------------------
 
     private SoundState currentState = SoundState.OutsideBraille;
     private UnityEngine.AudioSource audioSource;
     private float timer = 0f;
 
-    // 우선순위: InsideElevator > InsideVent > Climbing > OnBraille > OutsideBraille
+    // Priority: InsideElevator > InsideVent > Climbing > OnBraille > OutsideBraille
     private bool isOnBraille      = false;
     private bool isClimbing       = false;
     private bool isInsideVent     = false;
     private bool isInsideElevator = false;
 
-    // ─────────────────────────────────────────
-    //  Unity 생명주기
-    // ─────────────────────────────────────────
+    // -----------------------------------------------------------------------------
+    //  Unity lifecycle
+    // -----------------------------------------------------------------------------
 
     private void Awake()
     {
@@ -94,31 +99,31 @@ public class SoundStateManager : UnityEngine.MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────
-    //  외부에서 상태 변경
-    // ─────────────────────────────────────────
+    // -----------------------------------------------------------------------------
+    //  Public state updates
+    // -----------------------------------------------------------------------------
 
-    /// <summary>BrailleBlock이 호출 — 보도블럭 위 여부</summary>
+    /// <summary>Updates whether the player is standing on a braille block.</summary>
     public void SetOnBraille(bool value)
     {
         UnityEngine.Debug.Log("보도블럭 감지 상태: " + value);
         isOnBraille = value;
     }
 
-    /// <summary>LadderVentTransition이 호출 — 사다리 오르는 중 여부</summary>
+    /// <summary>Updates whether the player is climbing.</summary>
     public void SetClimbing(bool value) => isClimbing = value;
 
-    /// <summary>LadderVentTransition이 호출 — 벤트 안 여부</summary>
+    /// <summary>Updates whether the player is inside a vent.</summary>
     public void SetInsideVent(bool value) => isInsideVent = value;
 
-    /// <summary>ElevatorBoardingZone이 호출 — 엘리베이터 안 여부</summary>
+    /// <summary>Updates whether the player is inside an elevator.</summary>
     public void SetInsideElevator(bool value) => isInsideElevator = value;
 
-    // ─────────────────────────────────────────
-    //  내부 헬퍼
-    // ─────────────────────────────────────────
+    // -----------------------------------------------------------------------------
+    //  Internal helpers
+    // -----------------------------------------------------------------------------
 
-    /// <summary>우선순위에 따라 현재 상태 결정</summary>
+    /// <summary>Chooses the current state according to the configured priority.</summary>
     private SoundState EvaluateState()
     {
         if (isInsideElevator) return SoundState.InsideElevator;
@@ -132,15 +137,14 @@ public class SoundStateManager : UnityEngine.MonoBehaviour
     {
         var clip = GetCurrentClip();
 
-        // 재생할 클립이 없으면 현재 나고 있는 소리를 즉시 정지
+        // Stop immediately when the current state has no assigned clip.
         if (clip == null)
         {
             audioSource.Stop();
             return;
         }
 
-        // PlayOneShot 대신, 오디오 소스에 클립을 직접 넣고 Play()를 호출
-        // 이렇게 하면 상태가 바뀌거나 인터벌이 돌 때 이전 소리가 뚝 끊기고 새 소리가 납니다.
+        // Assign the clip directly so a state change immediately replaces the previous sound.
         audioSource.clip = clip;
         audioSource.volume = volume;
         audioSource.Play();

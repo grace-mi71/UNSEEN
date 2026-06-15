@@ -1,8 +1,13 @@
+/*
+ * Owner: Eunyeong Choi
+ * Function of this code: Opens and closes elevator doors with tweened movement, audio, and Unity events.
+ * Additional notes: Door transforms must be assigned in the Inspector; closed positions are captured during Awake.
+ */
 using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 
-// 엘리베이터 문을 제어하고 소리를 재생하는 클래스
+// Controls elevator door movement and playback of door sounds.
 [RequireComponent(typeof(AudioSource))]
 public class ElevatorController : MonoBehaviour
 {
@@ -36,7 +41,7 @@ public class ElevatorController : MonoBehaviour
         if (leftDoor != null) leftDoorClosedLocalPos = leftDoor.localPosition;
         if (rightDoor != null) rightDoorClosedLocalPos = rightDoor.localPosition;
 
-        // 오디오 소스 컴포넌트 가져오기 (없으면 자동 추가)
+        // Reuse the attached audio source or create one when missing.
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
@@ -50,7 +55,7 @@ public class ElevatorController : MonoBehaviour
         if (isOpen) return;
         isOpen = true;
 
-        // 문이 열릴 때 소리 한 번 재생
+        // Play the opening sound once when the door begins to open.
         if (openSound != null)
         {
             audioSource.PlayOneShot(openSound);
@@ -72,7 +77,7 @@ public class ElevatorController : MonoBehaviour
         if (!isOpen) return;
         isOpen = false;
 
-        // 문이 닫힐 때 소리 한 번 재생
+        // Play the closing sound once when the door begins to close.
         if (closeSound != null)
         {
             audioSource.PlayOneShot(closeSound);

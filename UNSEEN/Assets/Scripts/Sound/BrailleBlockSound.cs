@@ -1,3 +1,8 @@
+/*
+ * Owner: Haejun Lee
+ * Function of this code: Detects whether the player is standing above any child braille-block collider.
+ * Additional notes: Reports state changes to SoundStateManager and uses the configured vertical detection height.
+ */
 using UnityEngine;
 
 public sealed class BrailleBlockSound : MonoBehaviour
@@ -7,11 +12,11 @@ public sealed class BrailleBlockSound : MonoBehaviour
 
     private bool playerIsOn = false;
     private Transform playerTransform;
-    private Collider[] brailleColliders; // 자식 전체 Collider
+    private Collider[] brailleColliders; // All colliders below this object.
 
     private void Start()
     {
-        // 자식 포함 모든 Collider 수집
+        // Cache every collider in this object hierarchy.
         brailleColliders = GetComponentsInChildren<Collider>();
 
         var playerObj = GameObject.FindWithTag(playerTag);

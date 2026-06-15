@@ -1,3 +1,8 @@
+/*
+ * Owner: Eunyeong Choi, Gangmin Lee, Haejun Lee
+ * Function of this code: Converts an XR poke selection into an animated elevator button press and door-open request.
+ * Additional notes: Requires a collider, XRSimpleInteractable, AudioSource, and target ElevatorController.
+ */
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -40,7 +45,7 @@ namespace Unseen.Interaction
 
             pressed = true;
 
-            // ��ư�� ������ �� �Ҹ� �� �� ���
+            // Play the configured sound once when the button is pressed.
             if (pressSound != null)
             {
                 audioSource.PlayOneShot(pressSound);

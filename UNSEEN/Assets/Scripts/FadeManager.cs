@@ -1,17 +1,22 @@
+/*
+ * Owner: Haejun Lee
+ * Function of this code: Handles full-screen fade transitions for scene loading and in-place stage resets.
+ * Additional notes: Requires a full-screen black UI Image assigned to fadeImage.
+ */
 using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// 페이드 아웃/인 후 씬 전환을 담당합니다.
-/// 씬에 하나만 배치하세요.
+/// Handles scene transitions with fade-out and fade-in effects.
+/// Place only one instance in each scene.
 ///
-/// 셋업:
-///   1) Canvas (Screen Space - Overlay, Sort Order 999) 생성
-///   2) Canvas 아래 Image 추가 → 색상 검정, Alpha 0, 전체 화면 채우기
-///      (Anchor: stretch-stretch, Left/Right/Top/Bottom 모두 0)
-///   3) 해당 Image를 fadeImage 필드에 연결
+/// Setup:
+///   1) Create a Screen Space Overlay Canvas with sort order 999.
+///   2) Add a full-screen black Image with alpha 0 below the Canvas.
+///   3) Assign that Image to fadeImage.
 /// </summary>
 public class FadeManager : MonoBehaviour
 {
@@ -31,16 +36,16 @@ public class FadeManager : MonoBehaviour
 
     private void Start()
     {
-        // 씬 시작 시 항상 페이드 인
+        // Always fade in when the scene starts.
         StartCoroutine(FadeIn());
     }
 
-    // ─────────────────────────────────────────
-    //  외부 호출
-    // ─────────────────────────────────────────
+    // -----------------------------------------------------------------------------
+    //  Public entry points
+    // -----------------------------------------------------------------------------
 
     /// <summary>
-    /// 점프스케어 후 호출 — delay초 대기 → 페이드 아웃 → 현재 씬 재시작 → 페이드 인
+    /// Waits for the delay, fades out, reloads the current scene, and fades in.
     /// </summary>
     public void FadeAndRestartStage(float delay = 0f)
     {
@@ -48,20 +53,25 @@ public class FadeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Stage4 클리어 후 호출 — delay초 대기 → 페이드 아웃 → 메인 메뉴로 이동
+    /// Waits for the delay, fades out, and loads the requested menu scene.
     /// </summary>
     public void FadeAndGoToMainMenu(float delay = 0f, string sceneName = "Main")
     {
         StartCoroutine(FadeOutThenLoad(delay, reloadScene: false, sceneName: sceneName));
     }
 
-    // ─────────────────────────────────────────
-    //  코루틴
-    // ─────────────────────────────────────────
+    public void FadeAndResetCurrentStage(float delay = 0f)
+    {
+        StartCoroutine(FadeOutThenAction(delay, () => GameFlowManager.Instance?.RestartCurrentStage()));
+    }
+
+    // -----------------------------------------------------------------------------
+    //  Coroutines
+    // -----------------------------------------------------------------------------
 
     private IEnumerator FadeIn()
     {
-        // 검정에서 투명으로
+        // Transition from black to transparent.
         float elapsed = 0f;
         if (fadeImage != null)
             fadeImage.color = new Color(0, 0, 0, 1);
@@ -83,7 +93,7 @@ public class FadeManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        // 투명 → 검정 (페이드 아웃)
+        // Transition from transparent to black.
         float elapsed = 0f;
         while (elapsed < fadeDuration)
         {
@@ -94,12 +104,30 @@ public class FadeManager : MonoBehaviour
             yield return null;
         }
 
-        // 완전히 검게 된 후 씬 전환
-        // 새 씬의 FadeManager.Start()에서 자동으로 페이드 인
+        // Load after the screen is fully black. The next FadeManager fades in automatically.
         if (reloadScene)
             UnityEngine.SceneManagement.SceneManager.LoadScene(
                 UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         else
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
+
+    private IEnumerator FadeOutThenAction(float delay, Action action)
+    {
+        yield return new WaitForSeconds(delay);
+
+        float elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Clamp01(elapsed / fadeDuration);
+            if (fadeImage != null)
+                fadeImage.color = new Color(0, 0, 0, alpha);
+            yield return null;
+        }
+
+        action?.Invoke();
+        yield return null;
+        yield return FadeIn();
     }
 }
