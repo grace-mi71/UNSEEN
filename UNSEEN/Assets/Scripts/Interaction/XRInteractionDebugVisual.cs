@@ -1,8 +1,3 @@
-/*
- * Owner: Gangmin Lee
- * Function of this code: Changes interactable renderer colors for idle, hover, and selected XR interaction states.
- * Additional notes: Runtime material instances are used when colors are applied.
- */
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;

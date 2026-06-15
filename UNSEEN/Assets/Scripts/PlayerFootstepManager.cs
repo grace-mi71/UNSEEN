@@ -1,21 +1,16 @@
-/*
- * Owner: Eunyeong Choi
- * Function of this code: Plays player footstep audio after the XR camera moves a configured horizontal distance.
- * Additional notes: Vertical movement is ignored so climbing or head-height changes do not trigger footsteps.
- */
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class PlayerFootstepManager : MonoBehaviour
 {
     [Header("=== Footstep Settings ===")]
-    [Tooltip("ë°œìžêµ­ ì†Œë¦¬ íŒŒì¼")]
+    [Tooltip("¹ßÀÚ±¹ ¼Ò¸® ÆÄÀÏ")]
     public AudioClip footstepSound;
 
-    [Tooltip("ì†Œë¦¬ í¬ê¸°")]
+    [Tooltip("¼Ò¸® Å©±â")]
     [Range(0f, 1f)] public float volume = 0.5f;
 
-    [Tooltip("ì–¼ë§ˆë‚˜ ì´ë™í–ˆì„ ë•Œ ì†Œë¦¬ë¥¼ ë‚¼ ê²ƒì¸ì§€ (ë³´í­)")]
+    [Tooltip("¾ó¸¶³ª ÀÌµ¿ÇßÀ» ¶§ ¼Ò¸®¸¦ ³¾ °ÍÀÎÁö (º¸Æø)")]
     public float stepDistance = 0.8f;
 
     private AudioSource audioSource;
@@ -34,7 +29,7 @@ public class PlayerFootstepManager : MonoBehaviour
         }
         else
         {
-            UnityEngine.Debug.LogWarning("Main Cameraë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+            UnityEngine.Debug.LogWarning("Main Camera¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
         }
     }
 
@@ -42,22 +37,22 @@ public class PlayerFootstepManager : MonoBehaviour
     {
         if (headTransform == null) return;
 
-        // Use a Vector2 so vertical movement does not contribute to footsteps.
+        // ³ôÀÌ(YÃà) º¯È­´Â ¹«½ÃÇÏ°í, ¾ÕµÚÁÂ¿ì(X, ZÃà) ÀÌµ¿¸¸ °è»êÇÏ±â À§ÇØ Vector2 »ç¿ë
         Vector2 currentPositionXZ = new Vector2(headTransform.position.x, headTransform.position.z);
 
-        // Measure horizontal movement since the previous frame.
+        // ÀÌÀü ÇÁ·¹ÀÓ°ú ºñ±³ÇØ¼­ ÀÌµ¿ÇÑ °Å¸® °è»ê
         float distanceMoved = Vector2.Distance(currentPositionXZ, lastPositionXZ);
 
-        // Accumulate movement until one step distance is reached.
+        // ÀÌµ¿ °Å¸®¸¦ °è¼Ó ´©Àû
         accumulatedDistance += distanceMoved;
         lastPositionXZ = currentPositionXZ;
 
-        // Play a footstep when the accumulated distance exceeds the configured stride.
+        // ´©ÀûµÈ °Å¸®°¡ ¼³Á¤ÇÑ º¸Æø(stepDistance)À» ³ÑÀ¸¸é ¼Ò¸® Àç»ý
         if (accumulatedDistance >= stepDistance)
         {
             PlayFootstep();
 
-            // Reset the accumulated distance after playing a step.
+            // ¼Ò¸®¸¦ ³ÂÀ¸´Ï ´©Àû °Å¸®´Â ´Ù½Ã 0À¸·Î ÃÊ±âÈ­
             accumulatedDistance = 0f;
         }
     }

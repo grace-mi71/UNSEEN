@@ -1,8 +1,3 @@
-/*
- * Owner: Haejun Lee
- * Function of this code: Detects when the player enters an elevator and requests the next stage transition.
- * Additional notes: Uses the main camera position and a radius check instead of trigger callbacks.
- */
 using UnityEngine;
 
 public sealed class ElevatorZone : MonoBehaviour
@@ -53,7 +48,7 @@ public sealed class ElevatorZone : MonoBehaviour
         }
     }
 
-    // Visualize the detection radius in the Scene view.
+    // Scene뷰에서 감지 범위 시각화
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;

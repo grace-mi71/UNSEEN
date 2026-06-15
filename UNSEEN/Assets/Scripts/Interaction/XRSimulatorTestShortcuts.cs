@@ -1,8 +1,3 @@
-/*
- * Owner: Gangmin Lee
- * Function of this code: Provides editor-only keyboard shortcuts for XR simulator movement and elevator testing.
- * Additional notes: Compiled only in the Unity Editor when the Input System is enabled.
- */
 #if UNITY_EDITOR && ENABLE_INPUT_SYSTEM
 using Unity.XR.CoreUtils;
 using UnityEngine;

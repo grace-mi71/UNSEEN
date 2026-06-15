@@ -1,8 +1,3 @@
-/*
- * Owner: Gangmin Lee
- * Function of this code: Changes the active vision mode when an object enters the configured stage trigger.
- * Additional notes: The attached collider is configured as a trigger when the component is reset.
- */
 using UnityEngine;
 
 namespace Unseen.Vision

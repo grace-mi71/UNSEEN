@@ -1,8 +1,3 @@
-/*
- * Owner: Gangmin Lee
- * Function of this code: Applies normal, cataract, tunnel-vision, and darkness effects to the active XR camera.
- * Additional notes: Stage 4 darkness uses runtime URP gamma and exposure volumes; F1-F4 enable editor testing.
- */
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -32,18 +27,13 @@ namespace Unseen.Vision
         [SerializeField, Range(0.05f, 0.8f)] private float tunnelRadius = 0.13f;
         [SerializeField, Range(0.01f, 0.4f)] private float tunnelFeather = 0.07f;
         [SerializeField, Range(0f, 0.9f)] private float cataractHaze = 0.52f;
-        [SerializeField, Range(-1f, 0f)] private float darknessGamma = -0.75f;
-        [SerializeField, Range(-8f, 0f)] private float darknessExposure = -4f;
         [SerializeField] private bool enableNumberKeyTesting = true;
 
         private Camera targetCamera;
         private Transform overlayTransform;
         private Material overlayMaterial;
         private Volume cataractVolume;
-        private Volume darknessVolume;
         private DepthOfField depthOfField;
-        private LiftGammaGain darknessLiftGammaGain;
-        private ColorAdjustments darknessColorAdjustments;
         private VisionMode currentMode;
 
         public VisionMode CurrentMode => currentMode;
@@ -61,7 +51,6 @@ namespace Unseen.Vision
         private void Awake()
         {
             SetupCataractVolume();
-            SetupDarknessVolume();
             currentMode = initialMode;
         }
 
@@ -94,13 +83,6 @@ namespace Unseen.Vision
 
             if (cataractVolume != null)
                 cataractVolume.enabled = mode == VisionMode.Cataract;
-
-            if (darknessLiftGammaGain != null)
-                darknessLiftGammaGain.gamma.Override(new Vector4(1f, 1f, 1f, darknessGamma));
-            if (darknessColorAdjustments != null)
-                darknessColorAdjustments.postExposure.Override(darknessExposure);
-            if (darknessVolume != null)
-                darknessVolume.enabled = mode == VisionMode.Darkness;
         }
 
         public void SetNormal() => SetVisionMode(VisionMode.Normal);
@@ -188,27 +170,6 @@ namespace Unseen.Vision
             cataractVolume.enabled = false;
         }
 
-        private void SetupDarknessVolume()
-        {
-            var volumeObject = new GameObject("Darkness Gamma Volume");
-            volumeObject.transform.SetParent(transform, false);
-
-            darknessVolume = volumeObject.AddComponent<Volume>();
-            darknessVolume.isGlobal = true;
-            darknessVolume.priority = 1001f;
-            darknessVolume.profile = ScriptableObject.CreateInstance<VolumeProfile>();
-
-            darknessLiftGammaGain = darknessVolume.profile.Add<LiftGammaGain>();
-            darknessLiftGammaGain.active = true;
-            darknessLiftGammaGain.gamma.Override(new Vector4(1f, 1f, 1f, darknessGamma));
-
-            darknessColorAdjustments = darknessVolume.profile.Add<ColorAdjustments>();
-            darknessColorAdjustments.active = true;
-            darknessColorAdjustments.postExposure.Override(darknessExposure);
-
-            darknessVolume.enabled = false;
-        }
-
         private void HandleTestInput()
         {
             if (!enableNumberKeyTesting)
@@ -233,8 +194,6 @@ namespace Unseen.Vision
                 Destroy(overlayMaterial);
             if (cataractVolume != null && cataractVolume.profile != null)
                 Destroy(cataractVolume.profile);
-            if (darknessVolume != null && darknessVolume.profile != null)
-                Destroy(darknessVolume.profile);
         }
     }
 }

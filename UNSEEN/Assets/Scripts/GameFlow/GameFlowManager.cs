@@ -1,8 +1,3 @@
-/*
- * Owner: Eunyeong Choi, Haejun Lee
- * Function of this code: Coordinates stage initialization, elevator transitions, monsters, vision modes, and XR player teleportation.
- * Additional notes: Stage references and spawn points must be assigned in the Inspector.
- */
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -89,9 +84,9 @@ public class GameFlowManager : MonoBehaviour
         InitStage(currentState);
     }
 
-    // -----------------------------------------------------------------------------
-    //  Stage initialization
-    // -----------------------------------------------------------------------------
+    // ─────────────────────────────────────────
+    //  스테이지 초기화
+    // ─────────────────────────────────────────
 
     private void InitStage(GameState state)
     {
@@ -134,9 +129,9 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    // -----------------------------------------------------------------------------
-    //  Elevator boarding callback
-    // -----------------------------------------------------------------------------
+    // ─────────────────────────────────────────
+    //  탑승 콜백
+    // ─────────────────────────────────────────
 
     public void OnPlayerBoardedElevator(GameState boardedStage)
     {
@@ -152,9 +147,9 @@ public class GameFlowManager : MonoBehaviour
         StartCoroutine(TransitionToNextStage());
     }
 
-    // -----------------------------------------------------------------------------
-    //  Transition coroutines
-    // -----------------------------------------------------------------------------
+    // ─────────────────────────────────────────
+    //  전환 코루틴
+    // ─────────────────────────────────────────
 
     private IEnumerator TransitionToNextStage()
     {
@@ -174,10 +169,10 @@ public class GameFlowManager : MonoBehaviour
         yield return new WaitForSeconds(closeDuration);
         isTransitioning = false;
 
-        // Invoke optional completion events configured in the Inspector.
+        // 추가 이벤트 발동 (필요 시 Inspector에서 연결)
         onStage4Clear?.Invoke();
 
-        // Fade out and move to the configured main-menu scene.
+        // 페이드 아웃 → 메인 메뉴로 이동
         FadeManager.Instance?.FadeAndGoToMainMenu(0f, mainMenuSceneName);
     }
 
@@ -189,9 +184,9 @@ public class GameFlowManager : MonoBehaviour
         elevator?.CloseDoor();
     }
 
-    // -----------------------------------------------------------------------------
-    //  Helpers
-    // -----------------------------------------------------------------------------
+    // ─────────────────────────────────────────
+    //  헬퍼
+    // ─────────────────────────────────────────
 
     private ElevatorController GetCurrentElevator()
     {
@@ -205,31 +200,10 @@ public class GameFlowManager : MonoBehaviour
         };
     }
 
-    public void RestartCurrentStage()
-    {
-        StopAllCoroutines();
-        isTransitioning = false;
-
-        GetCurrentMonster()?.ResetForStageRestart();
-        InitStage(currentState);
-    }
-
     private static void SetMonsterActive(MonsterAI monster, bool active)
     {
         if (monster != null)
             monster.gameObject.SetActive(active);
-    }
-
-    private MonsterAI GetCurrentMonster()
-    {
-        return currentState switch
-        {
-            GameState.Stage1 => stage1Monster,
-            GameState.Stage2 => stage2Monster,
-            GameState.Stage3 => stage3Monster,
-            GameState.Stage4 => stage4Monster,
-            _ => null
-        };
     }
 
     private void TeleportPlayer(Transform target)
@@ -241,14 +215,9 @@ public class GameFlowManager : MonoBehaviour
             xrOrigin.transform.position = target.position;
         else
         {
-            // Never apply spawn-point pitch or roll to the XR rig. Head rotation must
-            // remain fully controlled by the headset's TrackedPoseDriver.
-            xrOrigin.transform.rotation = Quaternion.Euler(0f, target.eulerAngles.y, 0f);
-
-            // Rotating the origin can move the tracked camera around the rig pivot,
-            // so align its world position only after the yaw has been applied.
             var offset = target.position - cam.transform.position;
             xrOrigin.transform.position += offset;
+            xrOrigin.transform.rotation  = target.rotation;
         }
 
         if (teleportSound != null && audioSource != null)

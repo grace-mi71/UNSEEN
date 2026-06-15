@@ -1,8 +1,4 @@
-/*
- * Owner: Haejun Lee
- * Function of this code: Connects title-screen buttons to starting the main scene or exiting the application.
- * Additional notes: Both UI Button references must be assigned in the Inspector.
- */
+// Owner: Lee Haejun
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;

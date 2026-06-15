@@ -84,7 +84,7 @@ Shader "UNSEEN/VisionOverlay"
                     return half4(0, 0, 0, alpha);
                 }
 
-                return half4(0, 0, 0, 0);
+                return half4(0, 0, 0, 1);
             }
             ENDHLSL
         }

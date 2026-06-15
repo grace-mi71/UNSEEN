@@ -1,10 +1,6 @@
-/*
- * Owner: Eunyeong Choi, Haejun Lee
- * Function of this code: Drives monster patrol, climbing, chasing, footsteps, jump scares, and stage restart behavior.
- * Additional notes: Waypoints, player reference, NavMeshAgent, Animator, and jump-scare assets must be configured.
- */
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class MonsterAI : MonoBehaviour
@@ -44,22 +40,10 @@ public class MonsterAI : MonoBehaviour
 
     private int myWalkType;
     private float stepTimer = 0f;
-    private Vector3 initialPosition;
-    private Quaternion initialRotation;
-    private float initialAgentSpeed;
-
-    void Awake()
-    {
-        initialPosition = transform.position;
-        initialRotation = transform.rotation;
-
-        agent = GetComponent<NavMeshAgent>();
-        if (agent != null)
-            initialAgentSpeed = agent.speed;
-    }
 
     void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
         audioSource = GetComponent<AudioSource>();
@@ -209,60 +193,17 @@ public class MonsterAI : MonoBehaviour
         if (screamSound != null)
             audioSource.PlayOneShot(screamSound);
 
-        // Restart the current stage after the jump-scare sequence finishes.
+        // 3초 뒤 페이드 아웃 → 현재 스테이지 재시작
         Invoke("TriggerFadeRestart", 3f);
     }
 
     void TriggerFadeRestart()
     {
-        if (FadeManager.Instance != null)
-            FadeManager.Instance.FadeAndResetCurrentStage(0f);
-        else
-            GameFlowManager.Instance?.RestartCurrentStage();
+        FadeManager.Instance?.FadeAndGoToMainMenu(0f);
     }
 
     public void RestartGame()
     {
-        TriggerFadeRestart();
-    }
-
-    public void ResetForStageRestart()
-    {
-        CancelInvoke();
-        transform.DOKill();
-
-        if (jumpScareMonster != null)
-        {
-            jumpScareMonster.transform.DOKill();
-            jumpScareMonster.SetActive(false);
-        }
-
-        isGameOver = false;
-        isChasing = false;
-        isWalkingOut = false;
-        isClimbing = false;
-        currentPoint = 0;
-        stepTimer = 0f;
-
-        if (audioSource != null)
-            audioSource.Stop();
-
-        transform.SetPositionAndRotation(initialPosition, initialRotation);
-
-        if (agent != null)
-        {
-            agent.enabled = true;
-            agent.speed = initialAgentSpeed;
-            agent.Warp(initialPosition);
-        }
-
-        myWalkType = Random.Range(0, 3);
-        if (anim != null)
-            anim.SetInteger("WalkType", myWalkType);
-
-        if (startInElevator)
-            StartWalkOut();
-        else
-            MoveToNextPoint();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
