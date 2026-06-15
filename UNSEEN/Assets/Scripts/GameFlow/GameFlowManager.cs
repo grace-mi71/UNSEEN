@@ -42,7 +42,7 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("=== Stage4 Clear ===")]
     [Tooltip("메인 메뉴 씬 이름")]
-    [SerializeField] private string mainMenuSceneName = "Main";
+    [SerializeField] private string mainMenuSceneName = "Title";
     public UnityEvent onStage4Clear;
 
     [Header("=== Audio Settings ===")]

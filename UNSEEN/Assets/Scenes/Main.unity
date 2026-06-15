@@ -113840,7 +113840,7 @@ MonoBehaviour:
   doorCloseDelay: 3
   closeDuration: 1.5
   monsterExitDoorCloseDelay: 3
-  mainMenuSceneName: Main
+  mainMenuSceneName: Title
   onStage4Clear:
     m_PersistentCalls:
       m_Calls: []
