@@ -25,9 +25,12 @@ namespace Unseen.Interaction
             InstallLadders();
             InstallPokeInteractors();
             InstallElevatorButtons();
+
+            var bootstrapObject = new GameObject("XR Scene Bootstrap");
+            bootstrapObject.AddComponent<XRSceneBootstrap>();
         }
 
-        private static void ConfigureHardwareRig()
+        internal static void ConfigureHardwareRig()
         {
             var xrOrigin = UnityEngine.Object.FindFirstObjectByType<XROrigin>();
             if (xrOrigin == null)

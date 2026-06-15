@@ -6,6 +6,7 @@ Shader "UNSEEN/VisionOverlay"
         _TunnelRadius ("Tunnel Radius", Range(0.05, 1)) = 0.13
         _TunnelFeather ("Tunnel Feather", Range(0.01, 0.5)) = 0.07
         _CataractHaze ("Cataract Haze", Range(0, 1)) = 0.52
+        _DarknessOpacity ("Darkness Opacity", Range(0, 1)) = 0.68
     }
 
     SubShader
@@ -49,6 +50,7 @@ Shader "UNSEEN/VisionOverlay"
             float _TunnelRadius;
             float _TunnelFeather;
             float _CataractHaze;
+            float _DarknessOpacity;
 
             Varyings Vert(Attributes input)
             {
@@ -84,7 +86,7 @@ Shader "UNSEEN/VisionOverlay"
                     return half4(0, 0, 0, alpha);
                 }
 
-                return half4(0, 0, 0, 0);
+                return half4(0, 0, 0, _DarknessOpacity);
             }
             ENDHLSL
         }

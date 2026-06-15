@@ -214,6 +214,20 @@ public class GameFlowManager : MonoBehaviour
         InitStage(currentState);
     }
 
+    public void RealignPlayerToCurrentStage()
+    {
+        var target = currentState switch
+        {
+            GameState.Stage1 => startPoint1,
+            GameState.Stage2 => startPoint2,
+            GameState.Stage3 => startPoint3,
+            GameState.Stage4 => startPoint4,
+            _ => null
+        };
+
+        TeleportPlayer(target, false);
+    }
+
     private static void SetMonsterActive(MonsterAI monster, bool active)
     {
         if (monster != null)
@@ -232,7 +246,7 @@ public class GameFlowManager : MonoBehaviour
         };
     }
 
-    private void TeleportPlayer(Transform target)
+    private void TeleportPlayer(Transform target, bool playSound = true)
     {
         if (target == null || xrOrigin == null) return;
 
@@ -251,7 +265,7 @@ public class GameFlowManager : MonoBehaviour
             xrOrigin.transform.position += offset;
         }
 
-        if (teleportSound != null && audioSource != null)
+        if (playSound && teleportSound != null && audioSource != null)
             audioSource.PlayOneShot(teleportSound);
     }
 
