@@ -30532,15 +30532,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55b96a781e08ef247950e6a6196a481a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundStateManager
-  soundA: {fileID: 8300000, guid: 13154b84610589c4da24e41c1fd846a8, type: 3}
-  soundB: {fileID: 0}
+  soundA: {fileID: 0}
+  soundB: {fileID: 8300000, guid: 13154b84610589c4da24e41c1fd846a8, type: 3}
   soundC: {fileID: 8300000, guid: 33b718859aa28ce4db0f46d0dfe98b86, type: 3}
   soundD: {fileID: 8300000, guid: 13154b84610589c4da24e41c1fd846a8, type: 3}
   soundE: {fileID: 0}
   intervalA: 0.5
-  intervalB: 1
+  intervalB: 0.5
   intervalC: 0.5
-  intervalD: 1.5
+  intervalD: 0.5
   intervalE: 0.5
   volume: 1
 --- !u!4 &588402506
@@ -113844,8 +113844,10 @@ MonoBehaviour:
   onStage4Clear:
     m_PersistentCalls:
       m_Calls: []
-  teleportSound: {fileID: 0}
-  bgmClip: {fileID: 0}
+  teleportSound: {fileID: 8300000, guid: b4fdcac3ddce1a046ada4f636ed1dcf8, type: 3}
+  bgmClip: {fileID: 8300000, guid: 06bb5042ab38e8549a08edeff95019ec, type: 3}
+  sfxMixerGroup: {fileID: -5865195430604572930, guid: 427242502e4b08e46a9b4c08fd0ceb1e, type: 2}
+  bgmMixerGroup: {fileID: -2581182494624510382, guid: 427242502e4b08e46a9b4c08fd0ceb1e, type: 2}
 --- !u!4 &2131545109
 Transform:
   m_ObjectHideFlags: 0
