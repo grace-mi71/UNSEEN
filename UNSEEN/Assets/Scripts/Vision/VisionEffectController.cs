@@ -33,7 +33,7 @@ namespace Unseen.Vision
         [SerializeField, Range(0.05f, 0.8f)] private float tunnelRadius = 0.13f;
         [SerializeField, Range(0.01f, 0.4f)] private float tunnelFeather = 0.07f;
         [SerializeField, Range(0f, 0.9f)] private float cataractHaze = 0.52f;
-        [SerializeField, Range(0f, 1f)] private float darknessOpacity = 0.68f;
+        [SerializeField, Range(0f, 1f)] private float darknessOpacity = 0.94f;
         [SerializeField] private bool enableNumberKeyTesting = true;
 
         private Camera targetCamera;
