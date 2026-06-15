@@ -56,17 +56,16 @@ public class MonsterAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         if (agent != null)
             initialAgentSpeed = agent.speed;
-    }
 
-    void Start()
-    {
         anim = GetComponent<Animator>();
-
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
 
         if (jumpScareMonster != null) jumpScareMonster.SetActive(false);
+    }
 
+    void OnEnable()
+    {
         myWalkType = Random.Range(0, 3);
         anim.SetInteger("WalkType", myWalkType);
 

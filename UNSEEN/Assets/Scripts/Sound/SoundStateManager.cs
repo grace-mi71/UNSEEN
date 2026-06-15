@@ -4,6 +4,8 @@
  * Additional notes: State priority is elevator, vent, climbing, braille block, then outside braille.
  */
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class SoundStateManager : UnityEngine.MonoBehaviour
 {
@@ -43,6 +45,10 @@ public class SoundStateManager : UnityEngine.MonoBehaviour
     [UnityEngine.Header("=== Volume ===")]
     [UnityEngine.SerializeField, UnityEngine.Range(0f, 1f)] private float volume = 1f;
 
+    [Header("=== Mixer ===")]
+    [SerializeField] private AudioMixer mainMixer;         // Inspector 연결
+    [SerializeField] private string mixerParam = "SFXVolume";
+
     // -----------------------------------------------------------------------------
     //  Singleton
     // -----------------------------------------------------------------------------
@@ -79,6 +85,14 @@ public class SoundStateManager : UnityEngine.MonoBehaviour
 
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
+
+        // AudioMixer 그룹 연결
+        if (mainMixer != null)
+        {
+            var groups = mainMixer.FindMatchingGroups("SFX");
+            if (groups.Length > 0)
+                audioSource.outputAudioMixerGroup = groups[0];
+        }
     }
 
     private void Update()

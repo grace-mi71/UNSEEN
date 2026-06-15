@@ -4,9 +4,7 @@
  * scene transitions, settings panel visibility, and application exit.
  */
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
@@ -14,29 +12,67 @@ public class TitleManager : MonoBehaviour
     [Tooltip("Reference to the settings UI panel GameObject.")]
     public GameObject settingUI;
 
+    [Header("=== Audio ===")]
+    [Tooltip("AudioSettingsManager 오브젝트 참조")]
+    public AudioSettingsManager audioSettings;
+
+    [SerializeField] private float volumeStep = 0.1f;
+
+    public GameObject mainButtonGroup; // PlayBtn, SettingBtn, ExitBtn
+
     // ── Change Scene ──────────────────────────────
 
-    /// <summary>Loads the Main scene when the Play button is clicked.</summary>
     public void OnPlayButton()
     {
-        SceneManager.LoadScene("Main");
+        GameFlowManager.Instance?.StartGameFromTitle();
     }
 
-    /// <summary>Shows the settings UI panel when the Setting button is clicked.</summary>
     public void OnSettingButton()
     {
+        mainButtonGroup.SetActive(false);
         settingUI.SetActive(true);
     }
 
-    /// <summary>Hides the settings UI panel when the Close button is clicked.</summary>
     public void OnCloseSettingButton()
     {
         settingUI.SetActive(false);
+        mainButtonGroup.SetActive(true);
     }
 
-    /// <summary>Quits the application when the Exit button is clicked.</summary>
     public void OnExitButton()
     {
         Application.Quit();
+    }
+
+    // ── BGM Volume ────────────────────────────────
+
+    public void OnBgmVolumeUp()
+    {
+        if (audioSettings == null || audioSettings.bgmSlider == null) return;
+        audioSettings.bgmSlider.value =
+            Mathf.Clamp(audioSettings.bgmSlider.value + volumeStep, 0.0001f, 1f);
+    }
+
+    public void OnBgmVolumeDown()
+    {
+        if (audioSettings == null || audioSettings.bgmSlider == null) return;
+        audioSettings.bgmSlider.value =
+            Mathf.Clamp(audioSettings.bgmSlider.value - volumeStep, 0.0001f, 1f);
+    }
+
+    // ── SFX Volume ────────────────────────────────
+
+    public void OnSfxVolumeUp()
+    {
+        if (audioSettings == null || audioSettings.sfxSlider == null) return;
+        audioSettings.sfxSlider.value =
+            Mathf.Clamp(audioSettings.sfxSlider.value + volumeStep, 0.0001f, 1f);
+    }
+
+    public void OnSfxVolumeDown()
+    {
+        if (audioSettings == null || audioSettings.sfxSlider == null) return;
+        audioSettings.sfxSlider.value =
+            Mathf.Clamp(audioSettings.sfxSlider.value - volumeStep, 0.0001f, 1f);
     }
 }

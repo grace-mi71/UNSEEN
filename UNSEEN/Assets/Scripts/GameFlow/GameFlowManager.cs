@@ -13,10 +13,10 @@ using Unseen.Vision;
 [RequireComponent(typeof(AudioSource))]
 public class GameFlowManager : MonoBehaviour
 {
-    public enum GameState { Stage1, Stage2, Stage3, Stage4 }
+    public enum GameState { Title, Stage1, Stage2, Stage3, Stage4 }
 
     [Header("=== Current State ===")]
-    [SerializeField] private GameState currentState = GameState.Stage1;
+    [SerializeField] private GameState currentState = GameState.Title;
 
     [Header("=== Spawn Points ===")]
     [SerializeField] private Transform startPoint1;
@@ -45,6 +45,9 @@ public class GameFlowManager : MonoBehaviour
     [Tooltip("메인 메뉴 씬 이름")]
     [SerializeField] private string mainMenuSceneName = "Title";
     public UnityEvent onStage4Clear;
+
+    [Header("=== Title UI ===")]
+    [SerializeField] private GameObject titleCanvas;
 
     [Header("=== Audio Settings ===")]
     [SerializeField] private AudioClip teleportSound;
@@ -112,6 +115,11 @@ public class GameFlowManager : MonoBehaviour
 
         switch (state)
         {
+            case GameState.Title:
+                if (titleCanvas != null) titleCanvas.SetActive(true);
+                TeleportPlayer(startPoint1, false);
+                SetVisionMode(VisionMode.Normal);
+                return;
             case GameState.Stage1:
                 TeleportPlayer(startPoint1);
                 SetVisionMode(VisionMode.Normal);
@@ -133,6 +141,12 @@ public class GameFlowManager : MonoBehaviour
                 StartCoroutine(SpawnSequence(stage4Elevator, stage4Monster));
                 break;
         }
+    }
+
+    public void StartGameFromTitle()
+    {
+        if (titleCanvas != null) titleCanvas.SetActive(false);
+        InitStage(GameState.Stage1);
     }
 
     // -----------------------------------------------------------------------------
@@ -179,7 +193,7 @@ public class GameFlowManager : MonoBehaviour
         onStage4Clear?.Invoke();
 
         // Fade out and move to the configured main-menu scene.
-        FadeManager.Instance?.FadeAndGoToMainMenu(0f, mainMenuSceneName);
+        InitStage(GameState.Title);
     }
 
     private IEnumerator SpawnSequence(ElevatorController elevator, MonsterAI monster)
